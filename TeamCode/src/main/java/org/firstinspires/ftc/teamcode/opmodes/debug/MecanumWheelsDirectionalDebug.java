@@ -42,19 +42,16 @@ public class MecanumWheelsDirectionalDebug extends OpMode {
         } else {
             frontLeft.setPower(0);
         }
-
         if (gamepad1.y) {
             frontRight.setPower(1);
         } else {
             frontRight.setPower(0);
         }
-
         if (gamepad1.a) {
             backLeft.setPower(1);
         } else {
             backLeft.setPower(0);
         }
-
         if (gamepad1.b) {
             backRight.setPower(1);
         } else {

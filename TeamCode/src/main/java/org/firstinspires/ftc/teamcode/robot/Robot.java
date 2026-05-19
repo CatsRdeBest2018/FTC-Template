@@ -2,14 +2,13 @@ package org.firstinspires.ftc.teamcode.robot;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
 
+import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import com.qualcomm.robotcore.hardware.Servo;
 
 public class Robot {
     public DcMotorEx frontLeft;
@@ -37,9 +36,8 @@ public class Robot {
         backLeft.setZeroPowerBehavior(BRAKE);
         backRight.setZeroPowerBehavior(BRAKE);
 
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
-
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
         // =========================
         // LIMELIGHT
@@ -114,9 +112,14 @@ public class Robot {
         }
     }
 
+    @Configurable
     public class SimpleDriveController {
 
         private final ElapsedTime timer = new ElapsedTime();
+        private final ElapsedTime transitionTimer = new ElapsedTime();
+        public int transitionTime = 10;
+
+        public boolean bypass = true;
 
         private boolean active = false;
         private double durationMs = 0;
@@ -133,9 +136,7 @@ public class Robot {
 
             // Stop when timer expires
             if (timer.milliseconds() >= durationMs) {
-
                 stop();
-
                 return;
             }
 
@@ -197,7 +198,7 @@ public class Robot {
                 double backRightPower,
                 double timeMs
         ) {
-            if (active) return;
+            if ((active || transitionTimer.milliseconds() < transitionTime) && !bypass) return;
 
             fl = frontLeftPower;
             fr = frontRightPower;
@@ -208,6 +209,7 @@ public class Robot {
 
             timer.reset();
             active = true;
+            bypass = false;
         }
 
         public void stop() {
@@ -217,6 +219,7 @@ public class Robot {
             backLeft.setPower(0);
             backRight.setPower(0);
 
+            transitionTimer.reset();
             active = false;
         }
 

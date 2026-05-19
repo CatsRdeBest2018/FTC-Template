@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.robot.Robot;
 
-@Disabled
 @TeleOp(name = "SampleTele", group = "Samples")
 public class SampleTele extends OpMode {
 
@@ -31,9 +30,9 @@ public class SampleTele extends OpMode {
     public void loop() {
         // DRIVE
         robot.motorDriveXYVectors(
-                -gamepad1.left_stick_x,
-                gamepad1.left_stick_y,
-                -gamepad1.right_stick_x
+                gamepad1.left_stick_x,
+                -gamepad1.left_stick_y,
+                gamepad1.right_stick_x
         );
 
         telemetry.update();

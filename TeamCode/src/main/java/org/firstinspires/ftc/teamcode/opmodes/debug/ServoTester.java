@@ -40,7 +40,11 @@ public class ServoTester extends OpMode {
             }
         }
 
-        if (servo != null && ENABLE_SERVO) {
+        if (ENABLE_SERVO) {
+            if (servo == null) {
+                telemetry.addLine("Servo is null");
+                return;
+            }
             servo.setPosition(SERVO_POSITION);
 
             telemetry.addData("Servo", SERVO_NAME);
