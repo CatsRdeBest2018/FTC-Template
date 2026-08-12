@@ -3,8 +3,11 @@ package org.firstinspires.ftc.teamcode.opmodes.debug;
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
-
+//everyone but primarily ethan
 @Configurable
 @TeleOp(name = "Servo Tester", group = "Debug")
 public class ServoTester extends OpMode {
@@ -16,8 +19,22 @@ public class ServoTester extends OpMode {
     private Servo servo;
     private String currentServoName = "";
 
+    public DcMotorEx rightHang, leftHang;
+
+
     @Override
     public void init() {
+        rightHang = hardwareMap.get(DcMotorEx.class, "rightHang");
+        leftHang = hardwareMap.get(DcMotorEx.class, "leftHang");
+
+        leftHang.setDirection(DcMotorEx.Direction.REVERSE);
+
+        rightHang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+        leftHang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.FLOAT);
+
+        rightHang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        leftHang.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+
         telemetry.addLine("Enter servo name in Dashboard");
         telemetry.addLine("Set ENABLE_SERVO = true when ready");
         telemetry.update();
@@ -52,6 +69,10 @@ public class ServoTester extends OpMode {
         } else {
             telemetry.addLine("Servo disabled");
         }
+
+
+        telemetry.addData("Right Hang Pos", rightHang.getCurrentPosition());
+        telemetry.addData("Left Hang Pos", leftHang.getCurrentPosition());
 
         telemetry.update();
     }

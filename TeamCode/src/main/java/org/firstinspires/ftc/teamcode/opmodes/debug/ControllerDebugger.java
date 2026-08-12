@@ -26,6 +26,13 @@ public class ControllerDebugger extends OpMode {
         telemetry.addData("gamepad1.left_stick_x", gamepad1.left_stick_x);
         telemetry.addData("gamepad1.right_stick_y", gamepad1.right_stick_y);
         telemetry.addData("gamepad1.right_stick_x", gamepad1.right_stick_x);
+        telemetry.addLine("-------------");
+        telemetry.addData("gamepad1.dpad_left", gamepad1.dpad_left);
+        telemetry.addData("gamepad1.dpad_up", gamepad1.dpad_up);
+        telemetry.addData("gamepad1.dpad_right", gamepad1.dpad_right);
+        telemetry.addData("gamepad1.dpad_down", gamepad1.dpad_down);
+        telemetry.addLine("-------------");
+
         telemetry.update();
     }
 }

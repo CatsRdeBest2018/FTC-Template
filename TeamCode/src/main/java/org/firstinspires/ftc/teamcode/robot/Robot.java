@@ -26,10 +26,10 @@ public class Robot {
         // DRIVE
         // =========================
 
-        frontLeft = hardwareMap.get(DcMotorEx.class, "fl");
-        frontRight = hardwareMap.get(DcMotorEx.class, "fr");
-        backLeft = hardwareMap.get(DcMotorEx.class, "bl");
-        backRight = hardwareMap.get(DcMotorEx.class, "br");
+        frontLeft = hardwareMap.get(DcMotorEx.class, "motorFrontLeft");
+        frontRight = hardwareMap.get(DcMotorEx.class, "motorFrontRight");
+        backLeft = hardwareMap.get(DcMotorEx.class, "motorBackLeft");
+        backRight = hardwareMap.get(DcMotorEx.class, "motorBackRight");
 
         frontLeft.setZeroPowerBehavior(BRAKE);
         frontRight.setZeroPowerBehavior(BRAKE);
