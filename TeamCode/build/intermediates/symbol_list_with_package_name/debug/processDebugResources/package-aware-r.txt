@@ -326,6 +326,7 @@ attr colorControlHighlight
 attr colorControlNormal
 attr colorError
 attr colorErrorContainer
+attr colorInitReady
 attr colorMedium
 attr colorMediumLight
 attr colorMediumMedium

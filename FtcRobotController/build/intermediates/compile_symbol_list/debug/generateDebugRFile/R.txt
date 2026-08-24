@@ -325,6 +325,7 @@ int attr colorControlHighlight 0x0
 int attr colorControlNormal 0x0
 int attr colorError 0x0
 int attr colorErrorContainer 0x0
+int attr colorInitReady 0x0
 int attr colorMedium 0x0
 int attr colorMediumLight 0x0
 int attr colorMediumMedium 0x0

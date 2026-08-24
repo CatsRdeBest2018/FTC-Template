@@ -1,38 +1,78 @@
 package org.firstinspires.ftc.teamcode.opmodes.debug;
 
-import com.bylazar.configurables.annotations.Configurable;
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.hardware.Gamepad;
+import com.bylazar.telemetry.PanelsTelemetry;
+import com.bylazar.telemetry.TelemetryManager;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
-@Configurable
 @TeleOp(name = "ControllerDebugger", group = "Debug")
 public class ControllerDebugger extends OpMode {
+    private TelemetryManager telemetryM;
+
 
     @Override
     public void init() {
-        telemetry.addLine("Init");
+        telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
+        telemetryM.addLine("Controller debugger initialized");
+        telemetryM.update(telemetry);
     }
 
     @Override
     public void loop() {
-        telemetry.addLine("Gamepad 1");
-        telemetry.addData("gamepad1.a", gamepad1.a);
-        telemetry.addData("gamepad1.b", gamepad1.b);
-        telemetry.addData("gamepad1.x", gamepad1.x);
-        telemetry.addData("gamepad1.y", gamepad1.y);
-        telemetry.addLine("-------------");
-        telemetry.addData("gamepad1.left_stick_y", gamepad1.left_stick_y);
-        telemetry.addData("gamepad1.left_stick_x", gamepad1.left_stick_x);
-        telemetry.addData("gamepad1.right_stick_y", gamepad1.right_stick_y);
-        telemetry.addData("gamepad1.right_stick_x", gamepad1.right_stick_x);
-        telemetry.addLine("-------------");
-        telemetry.addData("gamepad1.dpad_left", gamepad1.dpad_left);
-        telemetry.addData("gamepad1.dpad_up", gamepad1.dpad_up);
-        telemetry.addData("gamepad1.dpad_right", gamepad1.dpad_right);
-        telemetry.addData("gamepad1.dpad_down", gamepad1.dpad_down);
-        telemetry.addLine("-------------");
+        addGamepadTelemetry("Gamepad 1", gamepad1);
+        telemetryM.addLine("================================");
+        addGamepadTelemetry("Gamepad 2", gamepad2);
+        telemetryM.update(telemetry);
+    }
 
-        telemetry.update();
+    private void addGamepadTelemetry(String name, Gamepad gamepad) {
+        telemetryM.addLine(name);
+        telemetryM.addData(name + " type", gamepad.type);
+        telemetryM.addData(name + " connected", gamepad.id != Gamepad.ID_UNASSOCIATED);
+
+        telemetryM.addLine("Face buttons");
+        telemetryM.addData("a / cross", String.format( "%s / %s", gamepad.a, gamepad.cross));
+        telemetryM.addData("b / circle", String.format( "%s / %s", gamepad.b, gamepad.circle));
+        telemetryM.addData("x / square", String.format( "%s / %s", gamepad.x, gamepad.square));
+        telemetryM.addData("y / triangle", String.format( "%s / %s", gamepad.y, gamepad.triangle));
+
+        telemetryM.addLine("Sticks");
+        telemetryM.addData("left stick (x, y)", String.format( "%.3f, %.3f",
+                gamepad.left_stick_x, gamepad.left_stick_y));
+        telemetryM.addData("right stick (x, y)", String.format( "%.3f, %.3f",
+                gamepad.right_stick_x, gamepad.right_stick_y));
+        telemetryM.addData("left stick button", gamepad.left_stick_button);
+        telemetryM.addData("right stick button", gamepad.right_stick_button);
+
+        telemetryM.addLine("D-pad");
+        telemetryM.addData("up", gamepad.dpad_up);
+        telemetryM.addData("down", gamepad.dpad_down);
+        telemetryM.addData("left", gamepad.dpad_left);
+        telemetryM.addData("right", gamepad.dpad_right);
+
+        telemetryM.addLine("Shoulders");
+        telemetryM.addData("left bumper", gamepad.left_bumper);
+        telemetryM.addData("right bumper", gamepad.right_bumper);
+        telemetryM.addData("left trigger", String.format( "%.3f (pressed: %s)",
+                gamepad.left_trigger, gamepad.left_trigger_pressed));
+        telemetryM.addData("right trigger", String.format( "%.3f (pressed: %s)",
+                gamepad.right_trigger, gamepad.right_trigger_pressed));
+
+        telemetryM.addLine("System buttons");
+        telemetryM.addData("start / options", String.format( "%s / %s", gamepad.start, gamepad.options));
+        telemetryM.addData("back / share", String.format( "%s / %s", gamepad.back, gamepad.share));
+        telemetryM.addData("guide / PS", String.format( "%s / %s", gamepad.guide, gamepad.ps));
+
+        telemetryM.addLine("Touchpad");
+        telemetryM.addData("touchpad button", gamepad.touchpad);
+        telemetryM.addData("finger 1", String.format( "%s (%.3f, %.3f)",
+                gamepad.touchpad_finger_1,
+                gamepad.touchpad_finger_1_x,
+                gamepad.touchpad_finger_1_y));
+        telemetryM.addData("finger 2", String.format( "%s (%.3f, %.3f)",
+                gamepad.touchpad_finger_2,
+                gamepad.touchpad_finger_2_x,
+                gamepad.touchpad_finger_2_y));
     }
 }

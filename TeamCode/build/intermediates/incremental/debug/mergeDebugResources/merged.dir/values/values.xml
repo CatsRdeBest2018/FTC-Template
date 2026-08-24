@@ -140,6 +140,7 @@
     <attr format="color" name="colorAlmostDark"/>
     <attr format="color" name="colorContainer"/>
     <attr format="color" name="colorErrorContainer"/>
+    <attr format="color" name="colorInitReady"/>
     <attr format="color" name="colorMedium"/>
     <attr format="color" name="colorMediumLight"/>
     <attr format="color" name="colorMediumMedium"/>
@@ -2301,7 +2302,7 @@
     <string name="configure_settings">Change Channel</string>
     <string name="confirmConfigDeleteMessage">Are you sure you want to delete this configuration?</string>
     <string name="confirmConfigDeleteTitle">Confirm Configuration Delete</string>
-    <string name="connectedToContext">The team numbers in the robot controller and driver station names do not match. Refer to the FTC Competition Manual for device naming rules.</string>
+    <string name="connectedToContext">The team numbers in the robot controller and driver station names do not match, or a device name is invalid. Refer to the FTC Competition Manual for device naming rules.</string>
     <string name="connection_owner_default">NONE</string>
     <string name="connection_owner_password_default">password</string>
     <string name="continuous_servo_description">a continuous rotation servo</string>
@@ -3059,6 +3060,7 @@
         <item name="android:buttonStyle">@style/FtcButtonStyle</item>
         <item name="textWhite">@color/text_white</item>
         <item name="colorReady">@color/light_green</item>
+        <item name="colorInitReady">@color/light_teal</item>
     </style>
     <style name="AppTheme.Blue">
         <item name="textBright">@color/bright_blue</item>

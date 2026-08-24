@@ -2,13 +2,19 @@ package org.firstinspires.ftc.teamcode.opmodes.debug;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
 
-import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.teamcode.robot.hardware.HardwareNames;
+import com.bylazar.telemetry.PanelsTelemetry;
+import com.bylazar.telemetry.TelemetryManager;
+import com.qualcomm.robotcore.eventloop.opmode.OpMode;
+
 @TeleOp(name = "Wheel Debug", group = "Debug")
 public class MecanumWheelsDirectionalDebug extends OpMode {
+    private TelemetryManager telemetryM;
+
     public DcMotorEx frontLeft;
     public DcMotorEx frontRight;
     public DcMotorEx backLeft;
@@ -16,21 +22,22 @@ public class MecanumWheelsDirectionalDebug extends OpMode {
 
     @Override
     public void init() {
-        frontLeft = hardwareMap.get(DcMotorEx.class, "fl");
-        frontRight = hardwareMap.get(DcMotorEx.class, "fr");
-        backLeft = hardwareMap.get(DcMotorEx.class, "bl");
-        backRight = hardwareMap.get(DcMotorEx.class, "br");
+        telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
+        frontLeft = hardwareMap.get(DcMotorEx.class, HardwareNames.FRONT_LEFT_DRIVE);
+        frontRight = hardwareMap.get(DcMotorEx.class, HardwareNames.FRONT_RIGHT_DRIVE);
+        backLeft = hardwareMap.get(DcMotorEx.class, HardwareNames.BACK_LEFT_DRIVE);
+        backRight = hardwareMap.get(DcMotorEx.class, HardwareNames.BACK_RIGHT_DRIVE);
 
         frontLeft.setZeroPowerBehavior(BRAKE);
         frontRight.setZeroPowerBehavior(BRAKE);
         backLeft.setZeroPowerBehavior(BRAKE);
         backRight.setZeroPowerBehavior(BRAKE);
 
-        frontRight.setDirection(DcMotorSimple.Direction.REVERSE);
-        backRight.setDirection(DcMotorSimple.Direction.REVERSE);
+        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
 
-        telemetry.addLine("Wheel Debug Ready");
-        telemetry.update();
+        telemetryM.addLine("Wheel Debug Ready");
+        telemetryM.update(telemetry);
 
     }
 
@@ -58,11 +65,11 @@ public class MecanumWheelsDirectionalDebug extends OpMode {
             backRight.setPower(0);
         }
 
-        telemetry.addData("X", "Front Left");
-        telemetry.addData("Y", "Front Right");
-        telemetry.addData("A", "Back Left");
-        telemetry.addData("B", "Back Right");
+        telemetryM.addData("X", "Front Left");
+        telemetryM.addData("Y", "Front Right");
+        telemetryM.addData("A", "Back Left");
+        telemetryM.addData("B", "Back Right");
 
-        telemetry.update();
+        telemetryM.update(telemetry);
     }
 }
