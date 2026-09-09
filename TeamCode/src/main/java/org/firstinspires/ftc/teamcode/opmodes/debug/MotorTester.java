@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.debug;
 
+import java.util.Locale;
+
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -64,8 +66,8 @@ public class MotorTester extends OpMode {
         telemetryM.addData("Run Mode", motor.getMode());
         telemetryM.addData("Zero Power", motor.getZeroPowerBehavior());
         telemetryM.addData("Encoder Position", motor.getCurrentPosition());
-        telemetryM.addData("Velocity", String.format( "%.2f ticks/sec", motor.getVelocity()));
-        telemetryM.addData("Current", String.format( "%.3f A", motor.getCurrent(CurrentUnit.AMPS)));
+        telemetryM.addData("Velocity", String.format(Locale.US,  "%.2f ticks/sec", motor.getVelocity()));
+        telemetryM.addData("Current", String.format(Locale.US,  "%.3f A", motor.getCurrent(CurrentUnit.AMPS)));
         telemetryM.addData("Over Current", motor.isOverCurrent());
         telemetryM.update(telemetry);
     }

@@ -29,6 +29,8 @@
 
 package org.firstinspires.ftc.robotcontroller.external.samples;
 
+import java.util.Locale;
+
 import com.qualcomm.hardware.modernrobotics.ModernRoboticsI2cGyro;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -146,15 +148,15 @@ public class SensorMRGyro extends LinearOpMode {
   }
 
   String formatRaw(int rawValue) {
-    return String.format("%d", rawValue);
+    return String.format(Locale.US, "%d", rawValue);
   }
 
   String formatRate(float rate) {
-    return String.format("%.3f", rate);
+    return String.format(Locale.US, "%.3f", rate);
   }
 
   String formatFloat(float rate) {
-    return String.format("%.3f", rate);
+    return String.format(Locale.US, "%.3f", rate);
   }
 
 }

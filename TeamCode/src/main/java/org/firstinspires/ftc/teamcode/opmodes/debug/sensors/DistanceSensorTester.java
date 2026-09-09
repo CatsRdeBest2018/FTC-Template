@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.debug.sensors;
 
+import java.util.Locale;
+
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DistanceSensor;
@@ -40,10 +42,10 @@ public class DistanceSensorTester extends OpMode {
 
         HardwareTelemetry.addDeviceInfo(telemetry, loadedName, sensor);
         telemetryM.addLine("Distance Readings");
-        telemetryM.addData("Millimeters", String.format( "%.2f mm", sensor.getDistance(DistanceUnit.MM)));
-        telemetryM.addData("Centimeters", String.format( "%.2f cm", sensor.getDistance(DistanceUnit.CM)));
-        telemetryM.addData("Meters", String.format( "%.4f m", sensor.getDistance(DistanceUnit.METER)));
-        telemetryM.addData("Inches", String.format( "%.3f in", sensor.getDistance(DistanceUnit.INCH)));
+        telemetryM.addData("Millimeters", String.format(Locale.US,  "%.2f mm", sensor.getDistance(DistanceUnit.MM)));
+        telemetryM.addData("Centimeters", String.format(Locale.US,  "%.2f cm", sensor.getDistance(DistanceUnit.CM)));
+        telemetryM.addData("Meters", String.format(Locale.US,  "%.4f m", sensor.getDistance(DistanceUnit.METER)));
+        telemetryM.addData("Inches", String.format(Locale.US,  "%.3f in", sensor.getDistance(DistanceUnit.INCH)));
         telemetryM.update(telemetry);
     }
 

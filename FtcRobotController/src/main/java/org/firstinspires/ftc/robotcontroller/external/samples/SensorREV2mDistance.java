@@ -32,6 +32,8 @@ THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 package org.firstinspires.ftc.robotcontroller.external.samples;
 
+import java.util.Locale;
+
 import com.qualcomm.hardware.rev.Rev2mDistanceSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -71,13 +73,13 @@ public class SensorREV2mDistance extends LinearOpMode {
         while(opModeIsActive()) {
             // generic DistanceSensor methods.
             telemetry.addData("deviceName", sensorDistance.getDeviceName() );
-            telemetry.addData("range", String.format("%.01f mm", sensorDistance.getDistance(DistanceUnit.MM)));
-            telemetry.addData("range", String.format("%.01f cm", sensorDistance.getDistance(DistanceUnit.CM)));
-            telemetry.addData("range", String.format("%.01f m", sensorDistance.getDistance(DistanceUnit.METER)));
-            telemetry.addData("range", String.format("%.01f in", sensorDistance.getDistance(DistanceUnit.INCH)));
+            telemetry.addData("range", String.format(Locale.US, "%.01f mm", sensorDistance.getDistance(DistanceUnit.MM)));
+            telemetry.addData("range", String.format(Locale.US, "%.01f cm", sensorDistance.getDistance(DistanceUnit.CM)));
+            telemetry.addData("range", String.format(Locale.US, "%.01f m", sensorDistance.getDistance(DistanceUnit.METER)));
+            telemetry.addData("range", String.format(Locale.US, "%.01f in", sensorDistance.getDistance(DistanceUnit.INCH)));
 
             // Rev2mDistanceSensor specific methods.
-            telemetry.addData("ID", String.format("%x", sensorTimeOfFlight.getModelID()));
+            telemetry.addData("ID", String.format(Locale.US, "%x", sensorTimeOfFlight.getModelID()));
             telemetry.addData("did time out", Boolean.toString(sensorTimeOfFlight.didTimeoutOccur()));
 
             telemetry.update();

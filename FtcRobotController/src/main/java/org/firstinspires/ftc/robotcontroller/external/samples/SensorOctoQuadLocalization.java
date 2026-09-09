@@ -21,6 +21,8 @@
 
 package org.firstinspires.ftc.robotcontroller.external.samples;
 
+import java.util.Locale;
+
 import com.qualcomm.hardware.digitalchickenlabs.OctoQuad;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -210,7 +212,7 @@ public class SensorOctoQuadLocalization extends LinearOpMode
             totalPackets++;
 
             // Print some statistics about CRC validation
-            telemetry.addLine(String.format("%d CRC error(s) in %d packets", badPackets, totalPackets));
+            telemetry.addLine(String.format(Locale.US, "%d CRC error(s) in %d packets", badPackets, totalPackets));
 
             // Send updated telemetry to the Driver Station
             telemetry.update();
@@ -248,7 +250,7 @@ public class SensorOctoQuadLocalization extends LinearOpMode
                 warnFlash = !warnFlash;
             }
 
-            telemetry.addLine(String.format("<b><font color='%s' >%s</font></b>",
+            telemetry.addLine(String.format(Locale.US, "<b><font color='%s' >%s</font></b>",
                                             warnFlash ? "red" : "white", warnString));
         }
     }

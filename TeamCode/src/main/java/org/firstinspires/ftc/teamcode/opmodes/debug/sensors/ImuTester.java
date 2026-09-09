@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.debug.sensors;
 
+import java.util.Locale;
+
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
@@ -50,21 +52,21 @@ public class ImuTester extends OpMode {
 
         HardwareTelemetry.addDeviceInfo(telemetry, "Automatically detected", imu);
         telemetryM.addLine("Orientation");
-        telemetryM.addData("Yaw", String.format( "%.3f°", angles.getYaw(AngleUnit.DEGREES)));
-        telemetryM.addData("Pitch", String.format( "%.3f°", angles.getPitch(AngleUnit.DEGREES)));
-        telemetryM.addData("Roll", String.format( "%.3f°", angles.getRoll(AngleUnit.DEGREES)));
+        telemetryM.addData("Yaw", String.format(Locale.US,  "%.3f°", angles.getYaw(AngleUnit.DEGREES)));
+        telemetryM.addData("Pitch", String.format(Locale.US,  "%.3f°", angles.getPitch(AngleUnit.DEGREES)));
+        telemetryM.addData("Roll", String.format(Locale.US,  "%.3f°", angles.getRoll(AngleUnit.DEGREES)));
         telemetryM.addData("Acquisition Time", angles.getAcquisitionTime());
 
         telemetryM.addLine("Angular Velocity");
-        telemetryM.addData("X Rotation", String.format( "%.3f°/s", velocity.xRotationRate));
-        telemetryM.addData("Y Rotation", String.format( "%.3f°/s", velocity.yRotationRate));
-        telemetryM.addData("Z Rotation", String.format( "%.3f°/s", velocity.zRotationRate));
+        telemetryM.addData("X Rotation", String.format(Locale.US,  "%.3f°/s", velocity.xRotationRate));
+        telemetryM.addData("Y Rotation", String.format(Locale.US,  "%.3f°/s", velocity.yRotationRate));
+        telemetryM.addData("Z Rotation", String.format(Locale.US,  "%.3f°/s", velocity.zRotationRate));
 
         telemetryM.addLine("Quaternion");
-        telemetryM.addData("W", String.format( "%.6f", quaternion.w));
-        telemetryM.addData("X", String.format( "%.6f", quaternion.x));
-        telemetryM.addData("Y", String.format( "%.6f", quaternion.y));
-        telemetryM.addData("Z", String.format( "%.6f", quaternion.z));
+        telemetryM.addData("W", String.format(Locale.US,  "%.6f", quaternion.w));
+        telemetryM.addData("X", String.format(Locale.US,  "%.6f", quaternion.x));
+        telemetryM.addData("Y", String.format(Locale.US,  "%.6f", quaternion.y));
+        telemetryM.addData("Z", String.format(Locale.US,  "%.6f", quaternion.z));
         telemetryM.update(telemetry);
     }
 }

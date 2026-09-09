@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.debug;
 
+import java.util.Locale;
+
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.bylazar.telemetry.PanelsTelemetry;
@@ -32,15 +34,15 @@ public class ControllerDebugger extends OpMode {
         telemetryM.addData(name + " connected", gamepad.id != Gamepad.ID_UNASSOCIATED);
 
         telemetryM.addLine("Face buttons");
-        telemetryM.addData("a / cross", String.format( "%s / %s", gamepad.a, gamepad.cross));
-        telemetryM.addData("b / circle", String.format( "%s / %s", gamepad.b, gamepad.circle));
-        telemetryM.addData("x / square", String.format( "%s / %s", gamepad.x, gamepad.square));
-        telemetryM.addData("y / triangle", String.format( "%s / %s", gamepad.y, gamepad.triangle));
+        telemetryM.addData("a / cross", String.format(Locale.US,  "%s / %s", gamepad.a, gamepad.cross));
+        telemetryM.addData("b / circle", String.format(Locale.US,  "%s / %s", gamepad.b, gamepad.circle));
+        telemetryM.addData("x / square", String.format(Locale.US,  "%s / %s", gamepad.x, gamepad.square));
+        telemetryM.addData("y / triangle", String.format(Locale.US,  "%s / %s", gamepad.y, gamepad.triangle));
 
         telemetryM.addLine("Sticks");
-        telemetryM.addData("left stick (x, y)", String.format( "%.3f, %.3f",
+        telemetryM.addData("left stick (x, y)", String.format(Locale.US,  "%.3f, %.3f",
                 gamepad.left_stick_x, gamepad.left_stick_y));
-        telemetryM.addData("right stick (x, y)", String.format( "%.3f, %.3f",
+        telemetryM.addData("right stick (x, y)", String.format(Locale.US,  "%.3f, %.3f",
                 gamepad.right_stick_x, gamepad.right_stick_y));
         telemetryM.addData("left stick button", gamepad.left_stick_button);
         telemetryM.addData("right stick button", gamepad.right_stick_button);
@@ -54,23 +56,23 @@ public class ControllerDebugger extends OpMode {
         telemetryM.addLine("Shoulders");
         telemetryM.addData("left bumper", gamepad.left_bumper);
         telemetryM.addData("right bumper", gamepad.right_bumper);
-        telemetryM.addData("left trigger", String.format( "%.3f (pressed: %s)",
+        telemetryM.addData("left trigger", String.format(Locale.US,  "%.3f (pressed: %s)",
                 gamepad.left_trigger, gamepad.left_trigger_pressed));
-        telemetryM.addData("right trigger", String.format( "%.3f (pressed: %s)",
+        telemetryM.addData("right trigger", String.format(Locale.US,  "%.3f (pressed: %s)",
                 gamepad.right_trigger, gamepad.right_trigger_pressed));
 
         telemetryM.addLine("System buttons");
-        telemetryM.addData("start / options", String.format( "%s / %s", gamepad.start, gamepad.options));
-        telemetryM.addData("back / share", String.format( "%s / %s", gamepad.back, gamepad.share));
-        telemetryM.addData("guide / PS", String.format( "%s / %s", gamepad.guide, gamepad.ps));
+        telemetryM.addData("start / options", String.format(Locale.US,  "%s / %s", gamepad.start, gamepad.options));
+        telemetryM.addData("back / share", String.format(Locale.US,  "%s / %s", gamepad.back, gamepad.share));
+        telemetryM.addData("guide / PS", String.format(Locale.US,  "%s / %s", gamepad.guide, gamepad.ps));
 
         telemetryM.addLine("Touchpad");
         telemetryM.addData("touchpad button", gamepad.touchpad);
-        telemetryM.addData("finger 1", String.format( "%s (%.3f, %.3f)",
+        telemetryM.addData("finger 1", String.format(Locale.US,  "%s (%.3f, %.3f)",
                 gamepad.touchpad_finger_1,
                 gamepad.touchpad_finger_1_x,
                 gamepad.touchpad_finger_1_y));
-        telemetryM.addData("finger 2", String.format( "%s (%.3f, %.3f)",
+        telemetryM.addData("finger 2", String.format(Locale.US,  "%s (%.3f, %.3f)",
                 gamepad.touchpad_finger_2,
                 gamepad.touchpad_finger_2_x,
                 gamepad.touchpad_finger_2_y));

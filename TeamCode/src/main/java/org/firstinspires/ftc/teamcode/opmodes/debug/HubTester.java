@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.debug;
 
+import java.util.Locale;
+
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.bylazar.telemetry.PanelsTelemetry;
@@ -96,7 +98,7 @@ public class HubTester extends OpMode {
 
     private void addSafeReading(String caption, String format, Reading reading) {
         try {
-            telemetryM.addData(caption, String.format( format, reading.get()));
+            telemetryM.addData(caption, String.format(Locale.US,  format, reading.get()));
         } catch (RuntimeException exception) {
             telemetryM.addData(caption, "Unavailable: " + exception.getMessage());
         }

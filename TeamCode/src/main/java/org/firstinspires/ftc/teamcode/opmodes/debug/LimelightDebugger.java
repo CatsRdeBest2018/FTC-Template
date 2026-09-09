@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.debug;
 
+import java.util.Locale;
+
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.hardware.limelightvision.LLResult;
 import com.qualcomm.hardware.limelightvision.LLResultTypes.BarcodeResult;
@@ -110,9 +112,9 @@ public class LimelightDebugger extends OpMode {
         telemetryM.addData("Enabled", ENABLE_CAMERA);
         telemetryM.addData("Running", limelight.isRunning());
         telemetryM.addData("Connected", limelight.isConnected());
-        telemetryM.addData("Time Since Update", String.format( "%d ms", limelight.getTimeSinceLastUpdate()));
+        telemetryM.addData("Time Since Update", String.format(Locale.US,  "%d ms", limelight.getTimeSinceLastUpdate()));
         telemetryM.addData("Requested Pipeline", appliedPipeline);
-        telemetryM.addData("Poll Rate", String.format( "%d Hz", appliedPollRate));
+        telemetryM.addData("Poll Rate", String.format(Locale.US,  "%d Hz", appliedPollRate));
 
         LLStatus status = limelight.getStatus();
         if (status == null) {
@@ -123,10 +125,10 @@ public class LimelightDebugger extends OpMode {
         telemetryM.addData("Camera Name", status.getName());
         telemetryM.addData("Active Pipeline", status.getPipelineIndex());
         telemetryM.addData("Pipeline Type", status.getPipelineType());
-        telemetryM.addData("FPS", String.format( "%.2f", status.getFps()));
-        telemetryM.addData("CPU", String.format( "%.2f%%", status.getCpu()));
-        telemetryM.addData("RAM", String.format( "%.2f%%", status.getRam()));
-        telemetryM.addData("Temperature", String.format( "%.2f °C", status.getTemp()));
+        telemetryM.addData("FPS", String.format(Locale.US,  "%.2f", status.getFps()));
+        telemetryM.addData("CPU", String.format(Locale.US,  "%.2f%%", status.getCpu()));
+        telemetryM.addData("RAM", String.format(Locale.US,  "%.2f%%", status.getRam()));
+        telemetryM.addData("Temperature", String.format(Locale.US,  "%.2f °C", status.getTemp()));
         telemetryM.addData("Processed Images", status.getPipeImgCount());
         telemetryM.addData("Snapshot Mode", status.getSnapshotMode());
         telemetryM.addData("Hardware Type", status.getHwType());
@@ -135,25 +137,25 @@ public class LimelightDebugger extends OpMode {
     private void addPipelineResult(LLResult result) {
         telemetryM.addLine("Latest Pipeline Result");
         telemetryM.addData("Valid Target", result.isValid());
-        telemetryM.addData("Pipeline", String.format( "%d (%s)",
+        telemetryM.addData("Pipeline", String.format(Locale.US,  "%d (%s)",
                 result.getPipelineIndex(), result.getPipelineType()));
-        telemetryM.addData("TX / TY", String.format( "%.3f° / %.3f°", result.getTx(), result.getTy()));
-        telemetryM.addData("TXNC / TYNC", String.format( "%.3f° / %.3f°", result.getTxNC(), result.getTyNC()));
-        telemetryM.addData("Target Area", String.format( "%.4f%%", result.getTa()));
-        telemetryM.addData("Focus Metric", String.format( "%.4f", result.getFocusMetric()));
-        telemetryM.addData("Capture Latency", String.format( "%.3f ms", result.getCaptureLatency()));
-        telemetryM.addData("Targeting Latency", String.format( "%.3f ms", result.getTargetingLatency()));
-        telemetryM.addData("Parse Latency", String.format( "%.3f ms", result.getParseLatency()));
-        telemetryM.addData("Staleness", String.format( "%d ms", result.getStaleness()));
+        telemetryM.addData("TX / TY", String.format(Locale.US,  "%.3f° / %.3f°", result.getTx(), result.getTy()));
+        telemetryM.addData("TXNC / TYNC", String.format(Locale.US,  "%.3f° / %.3f°", result.getTxNC(), result.getTyNC()));
+        telemetryM.addData("Target Area", String.format(Locale.US,  "%.4f%%", result.getTa()));
+        telemetryM.addData("Focus Metric", String.format(Locale.US,  "%.4f", result.getFocusMetric()));
+        telemetryM.addData("Capture Latency", String.format(Locale.US,  "%.3f ms", result.getCaptureLatency()));
+        telemetryM.addData("Targeting Latency", String.format(Locale.US,  "%.3f ms", result.getTargetingLatency()));
+        telemetryM.addData("Parse Latency", String.format(Locale.US,  "%.3f ms", result.getParseLatency()));
+        telemetryM.addData("Staleness", String.format(Locale.US,  "%d ms", result.getStaleness()));
         telemetryM.addData("Control Hub Timestamp", result.getControlHubTimeStamp());
 
         telemetryM.addLine("Robot Pose");
         telemetryM.addData("MegaTag 1", result.getBotpose());
         telemetryM.addData("MegaTag 2", result.getBotpose_MT2());
         telemetryM.addData("Tag Count", result.getBotposeTagCount());
-        telemetryM.addData("Tag Span", String.format( "%.4f", result.getBotposeSpan()));
-        telemetryM.addData("Average Distance", String.format( "%.4f m", result.getBotposeAvgDist()));
-        telemetryM.addData("Average Area", String.format( "%.4f", result.getBotposeAvgArea()));
+        telemetryM.addData("Tag Span", String.format(Locale.US,  "%.4f", result.getBotposeSpan()));
+        telemetryM.addData("Average Distance", String.format(Locale.US,  "%.4f m", result.getBotposeAvgDist()));
+        telemetryM.addData("Average Area", String.format(Locale.US,  "%.4f", result.getBotposeAvgArea()));
         telemetryM.addData("MT1 Std Dev", Arrays.toString(result.getStddevMt1()));
         telemetryM.addData("MT2 Std Dev", Arrays.toString(result.getStddevMt2()));
         telemetryM.addData("Python Output", Arrays.toString(result.getPythonOutput()));
@@ -170,7 +172,7 @@ public class LimelightDebugger extends OpMode {
         int limit = resultLimit(results.size());
         for (int index = 0; index < limit; index++) {
             FiducialResult result = results.get(index);
-            telemetryM.addData("Fiducial " + index, String.format(
+            telemetryM.addData("Fiducial " + index, String.format(Locale.US, 
                     "ID %d | %s | TX %.2f° | TY %.2f° | Area %.3f | Skew %.2f°",
                     result.getFiducialId(), result.getFamily(),
                     result.getTargetXDegrees(), result.getTargetYDegrees(),
@@ -183,7 +185,7 @@ public class LimelightDebugger extends OpMode {
         int limit = resultLimit(results.size());
         for (int index = 0; index < limit; index++) {
             DetectorResult result = results.get(index);
-            telemetryM.addData("Detector " + index, String.format(
+            telemetryM.addData("Detector " + index, String.format(Locale.US, 
                     "%s (ID %d) | Confidence %.3f | TX %.2f° | TY %.2f° | Area %.3f",
                     result.getClassName(), result.getClassId(), result.getConfidence(),
                     result.getTargetXDegrees(), result.getTargetYDegrees(), result.getTargetArea()));
@@ -195,7 +197,7 @@ public class LimelightDebugger extends OpMode {
         int limit = resultLimit(results.size());
         for (int index = 0; index < limit; index++) {
             ClassifierResult result = results.get(index);
-            telemetryM.addData("Classifier " + index, String.format(
+            telemetryM.addData("Classifier " + index, String.format(Locale.US, 
                     "%s (ID %d) | Confidence %.3f",
                     result.getClassName(), result.getClassId(), result.getConfidence()));
         }
@@ -206,7 +208,7 @@ public class LimelightDebugger extends OpMode {
         int limit = resultLimit(results.size());
         for (int index = 0; index < limit; index++) {
             ColorResult result = results.get(index);
-            telemetryM.addData("Color " + index, String.format(
+            telemetryM.addData("Color " + index, String.format(Locale.US, 
                     "TX %.2f° | TY %.2f° | Area %.3f",
                     result.getTargetXDegrees(), result.getTargetYDegrees(), result.getTargetArea()));
         }
@@ -217,7 +219,7 @@ public class LimelightDebugger extends OpMode {
         int limit = resultLimit(results.size());
         for (int index = 0; index < limit; index++) {
             BarcodeResult result = results.get(index);
-            telemetryM.addData("Barcode " + index, String.format( "%s | %s",
+            telemetryM.addData("Barcode " + index, String.format(Locale.US,  "%s | %s",
                     result.getFamily(), result.getData()));
         }
     }

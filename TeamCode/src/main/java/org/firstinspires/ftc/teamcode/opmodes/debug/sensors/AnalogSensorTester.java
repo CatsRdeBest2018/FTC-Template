@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.debug.sensors;
 
+import java.util.Locale;
+
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.AnalogInput;
@@ -42,10 +44,10 @@ public class AnalogSensorTester extends OpMode {
 
         HardwareTelemetry.addDeviceInfo(telemetry, loadedName, sensor);
         telemetryM.addLine("Analog Readings");
-        telemetryM.addData("Voltage", String.format( "%.4f V", voltage));
-        telemetryM.addData("Maximum Voltage", String.format( "%.4f V", maxVoltage));
+        telemetryM.addData("Voltage", String.format(Locale.US,  "%.4f V", voltage));
+        telemetryM.addData("Maximum Voltage", String.format(Locale.US,  "%.4f V", maxVoltage));
         telemetryM.addData("Full Scale", maxVoltage > 0
-                ? String.format("%.1f%%", voltage / maxVoltage * 100.0)
+                ? String.format(Locale.US, "%.1f%%", voltage / maxVoltage * 100.0)
                 : "Unavailable");
         telemetryM.update(telemetry);
     }

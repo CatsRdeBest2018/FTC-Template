@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.pedroPathing;
 
+import java.util.Locale;
+
 import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.changes;
 import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.drawCurrent;
 import static org.firstinspires.ftc.teamcode.pedroPathing.Tuning.drawCurrentAndHistory;
@@ -902,7 +904,7 @@ class PredictiveBrakingTuner extends OpMode {
                 velocityToBrakingDistance.add(new double[]{measuredVelocity, brakingDistance});
 
                 telemetryM.debug("Test " + iteration,
-                        String.format("v=%.3f  d=%.3f", measuredVelocity,
+                        String.format(Locale.US, "v=%.3f  d=%.3f", measuredVelocity,
                                 brakingDistance));
                 telemetryM.update(telemetry);
 
@@ -928,7 +930,7 @@ class PredictiveBrakingTuner extends OpMode {
                 telemetryM.debug("kLinearBraking", coefficients[0]);
                 for (BrakeRecord record : brakeData) {
                     Pose p = record.pose;
-                    telemetryM.debug(String.format("t=%.0f ms, x=%.2f, y=%.2f, θ=%.2f, v=%.2f",
+                    telemetryM.debug(String.format(Locale.US, "t=%.0f ms, x=%.2f, y=%.2f, θ=%.2f, v=%.2f",
                             record.timeMs, p.getX(), p.getY(),
                             p.getHeading(),
                             record.velocity));

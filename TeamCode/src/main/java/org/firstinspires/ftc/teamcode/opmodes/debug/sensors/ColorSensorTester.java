@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.debug.sensors;
 
+import java.util.Locale;
+
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.ColorSensor;
@@ -47,24 +49,24 @@ public class ColorSensorTester extends OpMode {
         telemetryM.addData("Green", sensor.green());
         telemetryM.addData("Blue", sensor.blue());
         telemetryM.addData("Alpha", sensor.alpha());
-        telemetryM.addData("ARGB", String.format( "0x%08X", sensor.argb()));
-        telemetryM.addData("I2C Address", String.format( "0x%02X", sensor.getI2cAddress().get8Bit()));
+        telemetryM.addData("ARGB", String.format(Locale.US,  "0x%08X", sensor.argb()));
+        telemetryM.addData("I2C Address", String.format(Locale.US,  "0x%02X", sensor.getI2cAddress().get8Bit()));
 
         if (sensor instanceof NormalizedColorSensor) {
             NormalizedColorSensor normalizedSensor = (NormalizedColorSensor) sensor;
             NormalizedRGBA colors = normalizedSensor.getNormalizedColors();
             telemetryM.addLine("Normalized Color Readings");
-            telemetryM.addData("Red", String.format( "%.4f", colors.red));
-            telemetryM.addData("Green", String.format( "%.4f", colors.green));
-            telemetryM.addData("Blue", String.format( "%.4f", colors.blue));
-            telemetryM.addData("Alpha", String.format( "%.4f", colors.alpha));
-            telemetryM.addData("Gain", String.format( "%.3f", normalizedSensor.getGain()));
+            telemetryM.addData("Red", String.format(Locale.US,  "%.4f", colors.red));
+            telemetryM.addData("Green", String.format(Locale.US,  "%.4f", colors.green));
+            telemetryM.addData("Blue", String.format(Locale.US,  "%.4f", colors.blue));
+            telemetryM.addData("Alpha", String.format(Locale.US,  "%.4f", colors.alpha));
+            telemetryM.addData("Gain", String.format(Locale.US,  "%.3f", normalizedSensor.getGain()));
         }
 
         if (sensor instanceof DistanceSensor) {
             DistanceSensor distanceSensor = (DistanceSensor) sensor;
             telemetryM.addLine("Integrated Distance Reading");
-            telemetryM.addData("Distance", String.format( "%.2f cm",
+            telemetryM.addData("Distance", String.format(Locale.US,  "%.2f cm",
                     distanceSensor.getDistance(DistanceUnit.CM)));
         }
 

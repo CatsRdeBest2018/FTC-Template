@@ -27,8 +27,7 @@ public class RobotDebugger extends OpMode {
     @Override
     public void init() {
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
-        robot = new Robot();
-        robot.init(hardwareMap);
+        robot = new Robot(hardwareMap);
         stopDrivetrain();
 
         telemetryM.addLine("Robot Debugger initialized");
@@ -39,7 +38,7 @@ public class RobotDebugger extends OpMode {
     @Override
     public void loop() {
         updateDrivetrain();
-        robot.tick();
+        robot.tick(gamepad1,gamepad2);
 
         telemetryM.addData("Master Enable", MASTER_ENABLE);
         telemetryM.addLine("================================");

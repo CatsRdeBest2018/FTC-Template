@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.debug;
 
+import java.util.Locale;
+
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
@@ -28,12 +30,12 @@ public class HardwareVerifier extends OpMode {
 
     @Override
     public void loop() {
-        telemetryM.addData("Summary", String.format( "%d passed, %d failed",
+        telemetryM.addData("Summary", String.format(Locale.US,  "%d passed, %d failed",
                 passed, results.size() - passed));
         telemetryM.addLine("================================");
 
         for (VerificationResult result : results) {
-            telemetryM.addData(result.passed ? "PASS" : "FAIL", String.format(
+            telemetryM.addData(result.passed ? "PASS" : "FAIL", String.format(Locale.US, 
                     "%s | %s | %s",
                     result.configName,
                     result.purpose,
