@@ -1,0 +1,27 @@
+# Gradle caches and generated build output
+.gradle/
+**/build/
+
+# Android Studio and IntelliJ workspace state
+.idea/
+*.iml
+
+# Machine-specific Android SDK location
+local.properties
+
+# Native Android build output
+.externalNativeBuild/
+.cxx/
+
+# Operating-system metadata
+.DS_Store
+Thumbs.db
+
+# Logs and temporary files
+*.log
+*.tmp
+
+# Generated Android packages
+*.apk
+*.aab
+

@@ -1,6 +1,6 @@
 Hardware Piece,Purpose,Config Name,Hub,Port,Notes
 Motor,Front-left wheel,motorFrontLeft,Control Hub,Motor 0,Reversed
-Pinpoint,The pinpiont,pinpoint,Control Hub,IC2 bus 3,
+Pinpoint,The pinpiont,pinpoint,Control Hub,I2C bus 3,
 ,,,,,
 ,,,,,
 ,,,,,
