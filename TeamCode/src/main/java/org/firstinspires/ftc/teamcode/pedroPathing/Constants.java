@@ -23,32 +23,26 @@ import java.util.OptionalDouble;
 public final class Constants {
     private Constants() {}
 
-    public static final MecanumConfig drivetrainConfig = new MecanumConfig(c -> {
-        c.frontLeftName.set(HardwareNames.FRONT_LEFT_DRIVE);
-        c.backLeftName.set(HardwareNames.BACK_LEFT_DRIVE);
-        c.frontRightName.set(HardwareNames.FRONT_RIGHT_DRIVE);
-        c.backRightName.set(HardwareNames.BACK_RIGHT_DRIVE);
-
+    public static MecanumConfig drivetrainConfig = new MecanumConfig(c -> {
+        c.frontLeftName.set("motorFrontLeft");
+        c.frontRightName.set("motorFrontRight");
+        c.backLeftName.set("motorBackLeft");
+        c.backRightName.set("motorBackRight");
         c.frontLeftDirection.set(DcMotorSimple.Direction.REVERSE);
-        c.backLeftDirection.set(DcMotorSimple.Direction.REVERSE);
         c.frontRightDirection.set(DcMotorSimple.Direction.FORWARD);
+        c.backLeftDirection.set(DcMotorSimple.Direction.REVERSE);
         c.backRightDirection.set(DcMotorSimple.Direction.FORWARD);
-        c.manualBrakeMode.set(true);
-        c.powerThreshold.set(0.01); // NEW
     });
 
-    public static final PinpointConfig localizerConfig = new PinpointConfig(c -> {
-        c.name.set(HardwareNames.PINPOINT);
+    public static PinpointConfig localizerConfig = new PinpointConfig(c -> {
+        c.name.set("pinpoint");
         c.podType.set(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
-        c.xPodOffset.set(0.0);
-        c.yPodOffset.set(0.5);
+        c.xPodOffset.set(0.13875467570747915);
+        c.yPodOffset.set(-0.38842749407910926);
         c.xPodDirection.set(GoBildaPinpointDriver.EncoderDirection.FORWARD);
         c.yPodDirection.set(GoBildaPinpointDriver.EncoderDirection.FORWARD);
         c.globalDistanceUnit.set(DistanceUnit.INCH);
         c.offsetUnits.set(DistanceUnit.INCH);
-        c.encoderResolutionUnit.set(DistanceUnit.INCH); // NEW
-        c.ticksPerUnit.set(OptionalDouble.empty()); // NEW
-        c.resetMode.set(PinpointLocalizer.ResetMode.RECALIBRATE_IMU); // NEW
     });
 
     public static final ForesightConfig foresightConfig = new ForesightConfig(c -> {
