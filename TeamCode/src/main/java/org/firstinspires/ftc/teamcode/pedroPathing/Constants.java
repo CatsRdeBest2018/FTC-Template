@@ -1,13 +1,15 @@
 package org.firstinspires.ftc.teamcode.pedroPathing;
 
-import com.pedropathing.control.FilteredPIDFCoefficients;
-import com.pedropathing.control.PIDFCoefficients;
+import com.pedropathing.algorithm.Foresight;
+import com.pedropathing.algorithm.ForesightConfig;
+import com.pedropathing.controllers.Controller;
 import com.pedropathing.follower.Follower;
-import com.pedropathing.follower.FollowerConstants;
-import com.pedropathing.ftc.FollowerBuilder;
-import com.pedropathing.ftc.drivetrains.MecanumConstants;
-import com.pedropathing.ftc.localization.constants.PinpointConstants;
-import com.pedropathing.paths.PathConstraints;
+import com.pedropathing.math.Matrix;
+import com.pedropathing.math.Vector2D;
+import com.pedropathing.revhub.drivetrains.Mecanum;
+import com.pedropathing.revhub.drivetrains.MecanumConfig;
+import com.pedropathing.revhub.localizers.PinpointConfig;
+import com.pedropathing.revhub.localizers.PinpointLocalizer;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
@@ -15,82 +17,94 @@ import com.qualcomm.robotcore.hardware.HardwareMap;
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.robot.hardware.HardwareNames;
 
-public class Constants {
-    public static FollowerConstants followerConstants = new FollowerConstants()
-            // Existing robot-specific measurements and tuned coefficients.
-            .mass(5.761)
-            .headingPIDFCoefficients(new PIDFCoefficients(1.25, 0, 0.1, 0.02))
-            .translationalPIDFCoefficients(new PIDFCoefficients(0.1,0,0.01,0.01))
-            .forwardZeroPowerAcceleration(-41.8504909065)
-            .lateralZeroPowerAcceleration(-66.6475137966)
+import java.util.OptionalDouble;
 
-            // Pedro 2.1.2 defaults below: starting points, not tuned for this robot.
-            // Drive coefficient order: P, I, D, derivative filter T, F.
-            .drivePIDFCoefficients(new FilteredPIDFCoefficients(0.025, 0, 0.00001, 0.6, 0.01))
-            .centripetalScaling(0.0005)
+/** Pedro Pathing 3 configuration for this robot. */
+public final class Constants {
+    private Constants() {}
 
-            // Optional small-error controllers. PIDF coefficient order: P, I, D, F.
-            .secondaryTranslationalPIDFCoefficients(new PIDFCoefficients(0.3, 0, 0.01, 0.015))
-            .secondaryHeadingPIDFCoefficients(new PIDFCoefficients(5.0, 0, 0.08, 0.01))
-            .secondaryDrivePIDFCoefficients(new FilteredPIDFCoefficients(0.02, 0, 0.000005, 0.6, 0.01))
-            .translationalPIDFSwitch(3.0)
-            .headingPIDFSwitch(Math.toRadians(9))
-            .drivePIDFSwitch(20.0)
+    public static final MecanumConfig drivetrainConfig = new MecanumConfig(c -> {
+        c.frontLeftName.set(HardwareNames.FRONT_LEFT_DRIVE);
+        c.backLeftName.set(HardwareNames.BACK_LEFT_DRIVE);
+        c.frontRightName.set(HardwareNames.FRONT_RIGHT_DRIVE);
+        c.backRightName.set(HardwareNames.BACK_RIGHT_DRIVE);
 
-            // Keep these AFTER the secondary coefficients: their setters enable dual PIDF.
-            .useSecondaryTranslationalPIDF(false)
-            .useSecondaryHeadingPIDF(false)
-            .useSecondaryDrivePIDF(false)
+        c.frontLeftDirection.set(DcMotorSimple.Direction.REVERSE);
+        c.backLeftDirection.set(DcMotorSimple.Direction.REVERSE);
+        c.frontRightDirection.set(DcMotorSimple.Direction.FORWARD);
+        c.backRightDirection.set(DcMotorSimple.Direction.FORWARD);
+        c.manualBrakeMode.set(true);
+        c.powerThreshold.set(0.01); // NEW
+    });
 
-            // Optional filtering and hold-point behavior; leave at defaults initially.
-            .driveKalmanFilterModelCovariance(6.0)
-            .driveKalmanFilterDataCovariance(1.0)
-            .holdPointTranslationalScaling(0.45)
-            .holdPointHeadingScaling(0.35)
-            .turnHeadingErrorThreshold(0.01)
-            .automaticHoldEnd(true);
+    public static final PinpointConfig localizerConfig = new PinpointConfig(c -> {
+        c.name.set(HardwareNames.PINPOINT);
+        c.podType.set(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
+        c.xPodOffset.set(0.0);
+        c.yPodOffset.set(0.5);
+        c.xPodDirection.set(GoBildaPinpointDriver.EncoderDirection.FORWARD);
+        c.yPodDirection.set(GoBildaPinpointDriver.EncoderDirection.FORWARD);
+        c.globalDistanceUnit.set(DistanceUnit.INCH);
+        c.offsetUnits.set(DistanceUnit.INCH);
+        c.encoderResolutionUnit.set(DistanceUnit.INCH); // NEW
+        c.ticksPerUnit.set(OptionalDouble.empty()); // NEW
+        c.resetMode.set(PinpointLocalizer.ResetMode.RECALIBRATE_IMU); // NEW
+    });
 
-    // Expanded from the four-argument constructor without changing its effective values.
-    public static PathConstraints pathConstraints = new PathConstraints(
-            0.99,  // Path progress (t-value) threshold
-            0.1,   // End velocity constraint
-            0.1,   // End translational error constraint
-            0.007, // End heading error constraint, radians
-            100,   // End timeout, milliseconds
-            1.0,   // Braking strength
-            10,    // Bezier curve search limit
-            1.0    // Braking start (global deceleration)
-    );
+    public static final ForesightConfig foresightConfig = new ForesightConfig(c -> {
+        Controller primaryForward = Controller.proportional(0.3); // NEW
+        Controller secondaryForward = Controller.proportional(0.1); // NEW
+        Controller primaryStrafe = Controller.proportional(0.3); // NEW
+        Controller secondaryStrafe = Controller.proportional(0.1); // NEW
+
+        c.forwardTranslational.set(
+                Controller.piecewise(secondaryForward).put(2.5, primaryForward)); // NEW
+        c.strafeTranslational.set(
+                Controller.piecewise(secondaryStrafe).put(2.5, primaryStrafe)); // NEW
+        c.headingFeedback.set(Controller.proportional(5.0)); // NEW
+        c.headingStaticFF.set(Controller.staticFeedforward(0.0)); // NEW
+        c.coast.set(Controller.proportionalFeedforward(0.01)); // NEW
+        c.brake.set(Controller.proportionalFeedforward(0.01)); // NEW
+
+        // Required placeholder braking models. AutoTune should replace them.
+        c.linearBrakeCoefficients.set(Matrix.diag(0.1, 0.1)); // NEW
+        c.quadraticBrakeCoefficients.set(Matrix.diag(0.001, 0.001)); // NEW
+        c.headingBrakeCoefficients.set(Vector2D.cartesian(0.05, 0.005)); // NEW
+
+        // Robot measurements transferred from the Pedro 2 constants.
+        c.maxAchievableForwardVelocity.set(55.0819047622);
+        c.maxAchievableStrafeVelocity.set(45.2136560155);
+        c.naturalForwardDeceleration.set(41.8504909065);
+        c.naturalStrafeDeceleration.set(66.6475137966);
+
+        c.holdPointTranslationalScaling.set(0.45);
+        c.holdPointHeadingScaling.set(0.35);
+        c.maxBrakingPower.set(0.2); // NEW
+        c.maxAccelerationConstraint.set(ForesightConfig.Constraint.NONE); // NEW
+        c.maxVelocityConstraint.set(ForesightConfig.Constraint.NONE); // NEW
+        c.maxDecelerationConstraint.set(ForesightConfig.Constraint.NONE); // NEW
+        c.maxPathSpeed.set(ForesightConfig.Constraint.NONE); // NEW
+        c.maxDecelerationScale.set(ForesightConfig.Constraint.NONE); // NEW
+        c.coastDownToVelocity.set(0.0); // NEW
+        c.headingDeviationTolerance.set(Math.toRadians(11.25)); // NEW
+        c.translationalDeviationTolerance.set(2.5); // NEW
+        c.brakeAtEnd.set(true); // NEW
+        c.pathSkip.set(true); // NEW
+        c.headingDriveRatio.set(0.5); // NEW
+        c.cosineScale.set(false); // NEW
+        c.minCorrectionDistance.set(1e-3); // NEW
+        c.parametricTConstraint.set(0.01); // 1 - previous 0.99 progress threshold
+        c.velocityConstraint.set(0.1);
+        c.translationalConstraint.set(0.1);
+        c.headingConstraint.set(0.007);
+        c.timeoutConstraint.set(100.0);
+        c.brakeAggression.set(1.0);
+    });
 
     public static Follower createFollower(HardwareMap hardwareMap) {
-        return new FollowerBuilder(followerConstants, hardwareMap)
-                .mecanumDrivetrain(driveConstants)
-                .pinpointLocalizer(localizerConstants)
-                .pathConstraints(pathConstraints)
-                .build();
+        return new Follower(
+                new PinpointLocalizer(hardwareMap, localizerConfig),
+                new Mecanum(hardwareMap, drivetrainConfig),
+                new Foresight(foresightConfig));
     }
-
-    public static MecanumConstants driveConstants = new MecanumConstants()
-            .maxPower(1)
-            .rightFrontMotorName(HardwareNames.FRONT_RIGHT_DRIVE)
-            .rightRearMotorName(HardwareNames.BACK_RIGHT_DRIVE)
-            .leftRearMotorName(HardwareNames.BACK_LEFT_DRIVE)
-            .leftFrontMotorName(HardwareNames.FRONT_LEFT_DRIVE)
-            .leftFrontMotorDirection(DcMotorSimple.Direction.REVERSE)
-            .leftRearMotorDirection(DcMotorSimple.Direction.REVERSE)
-            .rightFrontMotorDirection(DcMotorSimple.Direction.FORWARD)
-            .rightRearMotorDirection(DcMotorSimple.Direction.FORWARD)
-            .xVelocity(55.0819047622)
-            .yVelocity(45.2136560155)
-
-            .useBrakeModeInTeleOp(true);
-
-    public static PinpointConstants localizerConstants = new PinpointConstants()
-            .forwardPodY(0)
-            .strafePodX(0.5)
-            .distanceUnit(DistanceUnit.INCH)
-            .hardwareMapName(HardwareNames.PINPOINT)
-            .encoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD)
-            .forwardEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD)
-            .strafeEncoderDirection(GoBildaPinpointDriver.EncoderDirection.FORWARD);
 }

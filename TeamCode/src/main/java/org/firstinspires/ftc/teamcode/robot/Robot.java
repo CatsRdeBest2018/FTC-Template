@@ -1,11 +1,11 @@
 package org.firstinspires.ftc.teamcode.robot;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
+import static com.pedropathing.api.Paths.line;
 
 import com.pedropathing.follower.Follower;
-import com.pedropathing.geometry.BezierLine;
-import com.pedropathing.geometry.Pose;
-import com.pedropathing.paths.PathChain;
+import com.pedropathing.math.Pose;
+import com.pedropathing.paths.Path;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
@@ -56,13 +56,16 @@ public class Robot {
         frontRight.setPower(frontRightPower);
         backRight.setPower(backRightPower);
     }
+
     public void tick(Gamepad gamepad1, Gamepad gamepad2) {
         boolean driverWantsControl =
                 Math.abs(gamepad1.left_stick_x) > 0.1 ||
                 Math.abs(gamepad1.left_stick_y) > 0.1 ||
                 Math.abs(gamepad1.right_stick_x) > 0.1;
 
-        if (driverWantsControl) {
+        // Do not stop normal manual driving. Only interrupt an active automatic
+        // path/hold when the driver moves a joystick.
+        if (driverWantsControl && (follower.following() || follower.holding())) {
             macros.stop();
         }
 
@@ -71,7 +74,7 @@ public class Robot {
     }
 
     public void stop() {
-        follower.breakFollowing();
+        follower.stop();
         macros.stop();
         limelightController.stop();
     }
@@ -79,26 +82,22 @@ public class Robot {
     public class RobotMacros {
         public void driveToPos(Pose destination) {driveToPos(destination, 1.0, 1.0);}
         public void driveToPos(Pose destination, double drive_power, double position_tolerance) {
-            Pose current = follower.getPose();
-            Pose start = new Pose(current.getX(), current.getY(), current.getHeading());
+            Pose start = follower.pose();
 
-            follower.setMaxPowerScaling(drive_power);
-
-            if (Math.hypot(destination.getX() - start.getX(), destination.getY() - start.getY())
+            if (Math.hypot(destination.x() - start.x(), destination.y() - start.y())
                     < position_tolerance) {
-                follower.turnTo(destination.getHeading());
+                follower.hold(destination);
             } else {
-                PathChain path = follower.pathBuilder()
-                        .addPath(new BezierLine(start, destination))
-                        .setLinearHeadingInterpolation(start.getHeading(), destination.getHeading())
-                        .build();
-                follower.followPath(path, true);
+                Path path = line(start, destination)
+                        .linear(start, destination)
+                        .with(Constants.foresightConfig.maxPathSpeed.at(drive_power));
+                follower.holdEnd.set(true);
+                follower.follow(path);
             }
         }
 
         public void stop() {
-            follower.breakFollowing();
-            follower.startTeleopDrive();
+            follower.stop();
         }
     }
 }
