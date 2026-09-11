@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.robot;
 
 import com.pedropathing.api.Paths;
+import com.pedropathing.ivy.CommandBuilder;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
@@ -49,6 +50,7 @@ public class SquareAuto extends OpMode {
 
     private Path compound() { return Paths.path(side1(), side2(), side3(), side4()); }
 
+
 //    private Command autoRoutine() {
 //        return follow(follower, compound());
 //    }
@@ -56,6 +58,7 @@ public class SquareAuto extends OpMode {
     private Command autoRoutine() {
         return sequential(
                 follow(follower,side1()),
+
                 follow(follower,side2()),
                 follow(follower,side3()),
                 follow(follower,side4())
@@ -84,6 +87,7 @@ public class SquareAuto extends OpMode {
 
         telemetry.addData("X", follower.pose().x());
         telemetry.addData("Y", follower.pose().y());
+        //telemetry.addData("PATH", follower.currentPath());
         telemetry.addData(
                 "Heading",
                 Math.toDegrees(follower.pose().heading())
