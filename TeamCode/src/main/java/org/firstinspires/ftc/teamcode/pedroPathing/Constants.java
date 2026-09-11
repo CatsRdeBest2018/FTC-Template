@@ -23,19 +23,7 @@ import java.util.OptionalDouble;
  * Pedro Pathing 3 configuration for this robot.
  */
 public final class Constants {
-    private Constants() {
-    }
-
-    public static MecanumConfig drivetrainConfig = new MecanumConfig(c -> {
-        c.frontLeftName.set("motorFrontLeft");
-        c.frontRightName.set("motorFrontRight");
-        c.backLeftName.set("motorBackLeft");
-        c.backRightName.set("motorBackRight");
-        c.frontLeftDirection.set(DcMotorSimple.Direction.REVERSE);
-        c.frontRightDirection.set(DcMotorSimple.Direction.FORWARD);
-        c.backLeftDirection.set(DcMotorSimple.Direction.REVERSE);
-        c.backRightDirection.set(DcMotorSimple.Direction.FORWARD);
-    });
+    private Constants() {}
 
     public static PinpointConfig localizerConfig = new PinpointConfig(c -> {
         c.name.set("pinpoint");
@@ -46,6 +34,17 @@ public final class Constants {
         c.yPodDirection.set(GoBildaPinpointDriver.EncoderDirection.FORWARD);
         c.globalDistanceUnit.set(DistanceUnit.INCH);
         c.offsetUnits.set(DistanceUnit.INCH);
+    });
+
+    public static MecanumConfig drivetrainConfig = new MecanumConfig(c -> {
+        c.frontLeftName.set("motorFrontLeft");
+        c.frontRightName.set("motorFrontRight");
+        c.backLeftName.set("motorBackLeft");
+        c.backRightName.set("motorBackRight");
+        c.frontLeftDirection.set(DcMotorSimple.Direction.REVERSE);
+        c.frontRightDirection.set(DcMotorSimple.Direction.FORWARD);
+        c.backLeftDirection.set(DcMotorSimple.Direction.REVERSE);
+        c.backRightDirection.set(DcMotorSimple.Direction.FORWARD);
     });
 
     public static ForesightConfig foresightConfig = new ForesightConfig(
