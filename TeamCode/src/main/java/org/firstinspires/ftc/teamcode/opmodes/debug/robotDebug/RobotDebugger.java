@@ -1,11 +1,11 @@
-package org.firstinspires.ftc.teamcode.opmodes.debug.RobotDebug;
+package org.firstinspires.ftc.teamcode.opmodes.debug.robotDebug;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import org.firstinspires.ftc.teamcode.opmodes.debug.RobotDebug.RobotDebuggerVals.*;
+import org.firstinspires.ftc.teamcode.opmodes.debug.robotDebug.RobotDebuggerVals.*;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 
 /**

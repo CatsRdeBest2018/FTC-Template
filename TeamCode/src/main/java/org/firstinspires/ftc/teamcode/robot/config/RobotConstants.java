@@ -2,11 +2,10 @@ package org.firstinspires.ftc.teamcode.robot.config;
 
 public final class RobotConstants {
     public static final class Drive {
+        private Drive() {}
         public static final double MAX_DRIVE_POWER = 1.0;
         public static final double DEFAULT_DEBUG_POWER = 0.20;
         public static final double MAX_DEBUG_POWER = 0.40;
-
-        private Drive() {}
     }
 
     /*

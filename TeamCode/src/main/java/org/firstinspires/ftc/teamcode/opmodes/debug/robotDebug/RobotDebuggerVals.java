@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.opmodes.debug.RobotDebug;
+package org.firstinspires.ftc.teamcode.opmodes.debug.robotDebug;
 
 
 import com.bylazar.configurables.annotations.Configurable;
