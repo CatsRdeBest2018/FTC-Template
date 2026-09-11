@@ -19,9 +19,12 @@ import org.firstinspires.ftc.teamcode.robot.hardware.HardwareNames;
 
 import java.util.OptionalDouble;
 
-/** Pedro Pathing 3 configuration for this robot. */
+/**
+ * Pedro Pathing 3 configuration for this robot.
+ */
 public final class Constants {
-    private Constants() {}
+    private Constants() {
+    }
 
     public static MecanumConfig drivetrainConfig = new MecanumConfig(c -> {
         c.frontLeftName.set("motorFrontLeft");
@@ -45,55 +48,31 @@ public final class Constants {
         c.offsetUnits.set(DistanceUnit.INCH);
     });
 
-    public static final ForesightConfig foresightConfig = new ForesightConfig(c -> {
-        Controller primaryForward = Controller.proportional(0.3); // NEW
-        Controller secondaryForward = Controller.proportional(0.1); // NEW
-        Controller primaryStrafe = Controller.proportional(0.3); // NEW
-        Controller secondaryStrafe = Controller.proportional(0.1); // NEW
+    public static ForesightConfig foresightConfig = new ForesightConfig(
+            c -> {
+                Controller primaryTranslationalForward = Controller.proportional(0.2251399112152447);
+                Controller secondaryTranslationalForward = Controller.proportional(0.08318318134480976);
+                Controller primaryTranslationalLateral = Controller.proportional(0.3193399466128695);
+                Controller secondaryTranslationalLateral = Controller.proportional(0.11798757735292875);
 
-        c.forwardTranslational.set(
-                Controller.piecewise(secondaryForward).put(2.5, primaryForward)); // NEW
-        c.strafeTranslational.set(
-                Controller.piecewise(secondaryStrafe).put(2.5, primaryStrafe)); // NEW
-        c.headingFeedback.set(Controller.proportional(5.0)); // NEW
-        c.headingStaticFF.set(Controller.staticFeedforward(0.0)); // NEW
-        c.coast.set(Controller.proportionalFeedforward(0.01)); // NEW
-        c.brake.set(Controller.proportionalFeedforward(0.01)); // NEW
+                c.forwardTranslational.set(Controller.piecewise(secondaryTranslationalForward).put(2.5, primaryTranslationalForward));
+                c.strafeTranslational.set(Controller.piecewise(secondaryTranslationalLateral).put(2.5, primaryTranslationalLateral));
 
-        // Required placeholder braking models. AutoTune should replace them.
-        c.linearBrakeCoefficients.set(Matrix.diag(0.1, 0.1)); // NEW
-        c.quadraticBrakeCoefficients.set(Matrix.diag(0.001, 0.001)); // NEW
-        c.headingBrakeCoefficients.set(Vector2D.cartesian(0.05, 0.005)); // NEW
+                c.coast.set(Controller.proportionalFeedforward(0.0184602677303305));
+                c.brake.set(Controller.proportionalFeedforward(0.015691227570780925));
 
-        // Robot measurements transferred from the Pedro 2 constants.
-        c.maxAchievableForwardVelocity.set(55.0819047622);
-        c.maxAchievableStrafeVelocity.set(45.2136560155);
-        c.naturalForwardDeceleration.set(41.8504909065);
-        c.naturalStrafeDeceleration.set(66.6475137966);
+                c.headingFeedback.set(Controller.proportional(3.2324548963809905));
+                c.headingBrakeCoefficients.set(Vector2D.cartesian(0.03799643311649978, 0.008625819753101383));
 
-        c.holdPointTranslationalScaling.set(0.45);
-        c.holdPointHeadingScaling.set(0.35);
-        c.maxBrakingPower.set(0.2); // NEW
-        c.maxAccelerationConstraint.set(ForesightConfig.Constraint.NONE); // NEW
-        c.maxVelocityConstraint.set(ForesightConfig.Constraint.NONE); // NEW
-        c.maxDecelerationConstraint.set(ForesightConfig.Constraint.NONE); // NEW
-        c.maxPathSpeed.set(ForesightConfig.Constraint.NONE); // NEW
-        c.maxDecelerationScale.set(ForesightConfig.Constraint.NONE); // NEW
-        c.coastDownToVelocity.set(0.0); // NEW
-        c.headingDeviationTolerance.set(Math.toRadians(11.25)); // NEW
-        c.translationalDeviationTolerance.set(2.5); // NEW
-        c.brakeAtEnd.set(true); // NEW
-        c.pathSkip.set(true); // NEW
-        c.headingDriveRatio.set(0.5); // NEW
-        c.cosineScale.set(false); // NEW
-        c.minCorrectionDistance.set(1e-3); // NEW
-        c.parametricTConstraint.set(0.01); // 1 - previous 0.99 progress threshold
-        c.velocityConstraint.set(0.1);
-        c.translationalConstraint.set(0.1);
-        c.headingConstraint.set(0.007);
-        c.timeoutConstraint.set(100.0);
-        c.brakeAggression.set(1.0);
-    });
+                c.linearBrakeCoefficients.set(Matrix.diag(0.03690602256583665, 0.04414407584156761));
+                c.quadraticBrakeCoefficients.set(Matrix.diag(0.0027581060047426158, 0.002280816242447158));
+
+                c.maxAchievableForwardVelocity.set(57.280454246986395);
+                c.maxAchievableStrafeVelocity.set(48.905825291000596);
+                c.naturalForwardDeceleration.set(41.65658945223216);
+                c.naturalStrafeDeceleration.set(56.21021190176238);
+            }
+    );
 
     public static Follower createFollower(HardwareMap hardwareMap) {
         return new Follower(
