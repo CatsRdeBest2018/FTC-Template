@@ -21,8 +21,6 @@
 
 package org.firstinspires.ftc.robotcontroller.external.samples;
 
-import java.util.Locale;
-
 import android.util.Size;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -146,11 +144,11 @@ public class ConceptVisionColorSensor extends LinearOpMode
 
             // Display the Color Sensor result.
             telemetry.addData("Best Match", result.closestSwatch);
-            telemetry.addLine(String.format(Locale.US, "RGB   (%3d, %3d, %3d)",
+            telemetry.addLine(String.format("RGB   (%3d, %3d, %3d)",
                                             result.RGB[0], result.RGB[1], result.RGB[2]));
-            telemetry.addLine(String.format(Locale.US, "HSV   (%3d, %3d, %3d)",
+            telemetry.addLine(String.format("HSV   (%3d, %3d, %3d)",
                                             result.HSV[0], result.HSV[1], result.HSV[2]));
-            telemetry.addLine(String.format(Locale.US, "YCrCb (%3d, %3d, %3d)",
+            telemetry.addLine(String.format("YCrCb (%3d, %3d, %3d)",
                                             result.YCrCb[0], result.YCrCb[1], result.YCrCb[2]));
             telemetry.update();
 

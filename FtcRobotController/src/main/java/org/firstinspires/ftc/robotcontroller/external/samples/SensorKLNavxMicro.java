@@ -29,8 +29,6 @@
 
 package org.firstinspires.ftc.robotcontroller.external.samples;
 
-import java.util.Locale;
-
 import com.qualcomm.hardware.kauailabs.NavxMicroNavigationSensor;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -117,7 +115,7 @@ public class SensorKLNavxMicro extends LinearOpMode {
     }
 
     String formatRate(float rate) {
-        return String.format(Locale.US, "%.3f", rate);
+        return String.format("%.3f", rate);
     }
 
     String formatAngle(AngleUnit angleUnit, double angle) {
@@ -125,6 +123,6 @@ public class SensorKLNavxMicro extends LinearOpMode {
     }
 
     String formatDegrees(double degrees){
-        return String.format(Locale.US, "%.1f", AngleUnit.DEGREES.normalize(degrees));
+        return String.format("%.1f", AngleUnit.DEGREES.normalize(degrees));
     }
 }

@@ -21,8 +21,6 @@
 
 package org.firstinspires.ftc.robotcontroller.external.samples;
 
-import java.util.Locale;
-
 import com.qualcomm.hardware.digitalchickenlabs.OctoQuad;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -132,7 +130,7 @@ public class UtilityOctoQuadConfigMenu extends LinearOpMode
         for(int i = 0; i < OctoQuad.NUM_ENCODERS; i++)
         {
             optionsEncoderDirections[i] = new TelemetryMenu.BooleanOption(
-                    String.format(Locale.US, "Encoder %d direction", i),
+                    String.format("Encoder %d direction", i),
                     octoquad.getSingleEncoderDirection(i) == OctoQuad.EncoderDirection.REVERSE,
                     "-",
                     "+");
@@ -142,7 +140,7 @@ public class UtilityOctoQuadConfigMenu extends LinearOpMode
         for(int i = 0; i < OctoQuad.NUM_ENCODERS; i++)
         {
             optionsVelocityIntervals[i] = new TelemetryMenu.IntegerOption(
-                    String.format(Locale.US, "Chan %d velocity intvl", i),
+                    String.format("Chan %d velocity intvl", i),
                     OctoQuad.MIN_VELOCITY_MEASUREMENT_INTERVAL_MS,
                     OctoQuad.MAX_VELOCITY_MEASUREMENT_INTERVAL_MS,
                     octoquad.getSingleVelocitySampleInterval(i));
@@ -154,19 +152,19 @@ public class UtilityOctoQuadConfigMenu extends LinearOpMode
             OctoQuad.ChannelPulseWidthParams params = octoquad.getSingleChannelPulseWidthParams(i);
 
             optionsAbsParamsMax[i] = new TelemetryMenu.IntegerOption(
-                    String.format(Locale.US, "Chan %d max pulse length", i),
+                    String.format("Chan %d max pulse length", i),
                     OctoQuad.MIN_PULSE_WIDTH_US,
                     OctoQuad.MAX_PULSE_WIDTH_US,
                     params.max_length_us);
 
             optionsAbsParamsMin[i] = new TelemetryMenu.IntegerOption(
-                    String.format(Locale.US, "Chan %d min pulse length", i),
+                    String.format("Chan %d min pulse length", i),
                     OctoQuad.MIN_PULSE_WIDTH_US,
                     OctoQuad.MAX_PULSE_WIDTH_US,
                     params.min_length_us);
 
             optionsAbsParamsWrapTracking[i] = new TelemetryMenu.BooleanOption(
-                    String.format(Locale.US, "Chan %d wrap tracking enabled", i),
+                    String.format("Chan %d wrap tracking enabled", i),
                     octoquad.getSingleChannelPulseWidthTracksWrap(i),
                     "yes",
                     "no");
@@ -631,7 +629,7 @@ public class UtilityOctoQuadConfigMenu extends LinearOpMode
             @Override
             protected String getDisplayText()
             {
-                return String.format(Locale.US, "%s: <font color='#e37c07' face=monospace>%s</font>", name, e[idx].name());
+                return String.format("%s: <font color='#e37c07' face=monospace>%s</font>", name, e[idx].name());
             }
 
             public Enum getValue()
@@ -686,7 +684,7 @@ public class UtilityOctoQuadConfigMenu extends LinearOpMode
             @Override
             protected String getDisplayText()
             {
-                return String.format(Locale.US, "%s: <font color='#e37c07' face=monospace>%d</font>", name, i);
+                return String.format("%s: <font color='#e37c07' face=monospace>%d</font>", name, i);
             }
 
             public int getValue()
@@ -748,7 +746,7 @@ public class UtilityOctoQuadConfigMenu extends LinearOpMode
                     valStr = val ? "true" : "false";
                 }
 
-                return String.format(Locale.US, "%s: <font color='#e37c07' face=monospace>%s</font>", name, valStr);
+                return String.format("%s: <font color='#e37c07' face=monospace>%s</font>", name, valStr);
             }
 
             public boolean getValue()

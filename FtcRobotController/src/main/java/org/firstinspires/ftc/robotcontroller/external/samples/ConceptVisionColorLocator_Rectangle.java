@@ -21,8 +21,6 @@
 
 package org.firstinspires.ftc.robotcontroller.external.samples;
 
-import java.util.Locale;
-
 import android.util.Size;
 
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
@@ -208,7 +206,7 @@ public class ConceptVisionColorLocator_Rectangle extends LinearOpMode
             for(ColorBlobLocatorProcessor.Blob b : blobs)
             {
                 RotatedRect boxFit = b.getBoxFit();
-                telemetry.addLine(String.format(Locale.US, "(%3d,%3d) %5d %4.2f  %5.2f %3d %5.3f ",
+                telemetry.addLine(String.format("(%3d,%3d) %5d %4.2f  %5.2f %3d %5.3f ",
                         (int) boxFit.center.x, (int) boxFit.center.y, b.getContourArea(), b.getDensity(),
                         b.getAspectRatio(), (int) b.getArcLength(), b.getCircularity()));
             }

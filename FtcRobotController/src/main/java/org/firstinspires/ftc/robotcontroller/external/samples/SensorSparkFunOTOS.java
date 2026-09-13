@@ -5,8 +5,6 @@
 */
 package org.firstinspires.ftc.robotcontroller.external.samples;
 
-import java.util.Locale;
-
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -151,8 +149,8 @@ public class SensorSparkFunOTOS extends LinearOpMode {
 
         telemetry.addLine("OTOS configured! Press start to get position data!");
         telemetry.addLine();
-        telemetry.addLine(String.format(Locale.US, "OTOS Hardware Version: v%d.%d", hwVersion.major, hwVersion.minor));
-        telemetry.addLine(String.format(Locale.US, "OTOS Firmware Version: v%d.%d", fwVersion.major, fwVersion.minor));
+        telemetry.addLine(String.format("OTOS Hardware Version: v%d.%d", hwVersion.major, hwVersion.minor));
+        telemetry.addLine(String.format("OTOS Firmware Version: v%d.%d", fwVersion.major, fwVersion.minor));
         telemetry.update();
     }
 }
