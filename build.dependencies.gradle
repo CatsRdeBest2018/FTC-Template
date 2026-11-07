@@ -21,5 +21,5 @@ dependencies {
     implementation 'com.pedropathing.ivy:core:1.1.0'
     implementation 'com.pedropathing.ivy:pedro:1.1.0'
     implementation 'com.pedropathing:revhub:3.0.2'
-    implementation 'com.pedropathing:tuning:1.0.1'
+    implementation 'com.pedropathing:tuning:1.0.3'
 }
