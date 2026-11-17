@@ -1,0 +1,78 @@
+name: Pedro Quickstart updates
+
+on:
+  schedule:
+    - cron: '30 11 * * *'
+  workflow_dispatch:
+  push:
+    branches: [main]
+    paths: ['.github/workflows/pedro-updates.yml']
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: pedro-quickstart-updates
+  cancel-in-progress: false
+
+jobs:
+  propose:
+    if: github.repository == 'CatsRdeBest2018/FTC-Template'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      BASE_BRANCH: ${{ github.event.repository.default_branch }}
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 0
+      - name: Merge Quickstart into a draft update PR
+        shell: bash
+        run: |
+          set -euo pipefail
+          existing=$(gh pr list --state open --limit 1000 --json headRefName --jq '[.[] | select(.headRefName | startswith("codex/pedro-update-"))] | length')
+          if [ "$existing" != 0 ]; then
+            echo 'An update PR is already open; preserving it until it is merged or closed.' >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git fetch --no-tags https://github.com/Pedro-Pathing/Quickstart.git master
+          upstream=$(git rev-parse FETCH_HEAD)
+          if git merge-base --is-ancestor "$upstream" HEAD; then
+            echo 'No new Quickstart commits to propose.' >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          branch="codex/pedro-update-${upstream:0:12}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          git switch -c "$branch"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          if ! git -c core.hooksPath=/dev/null merge --no-ff --no-edit "$upstream"; then
+            {
+              echo '## Quickstart update needs manual conflict resolution'
+              echo 'No update was pushed and main was not changed.'
+              echo '```'
+              git diff --name-only --diff-filter=U
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+            git merge --abort || true
+            echo '::error::Quickstart could not be merged safely. Resolve the conflicts manually; no changes were pushed.'
+            exit 1
+          fi
+          # Push a new proposal branch only. Never force-push or update main.
+          git push origin "HEAD:refs/heads/$branch"
+          body="$RUNNER_TEMP/pedro-update-pr.md"
+          cat > "$body" <<EOF
+          Merge Pedro Quickstart through [${upstream:0:12}](https://github.com/Pedro-Pathing/Quickstart/commit/$upstream).
+
+          Git merged upstream with this repository's existing commits without conflicts. Custom changes are retained by the normal three-way merge; no files were reset to upstream and no conflict-resolution shortcuts were used.
+
+          Review the diff, build, and test on the robot before accepting. A conflict-free merge does not guarantee API or behavior compatibility. This workflow has not built or robot-tested these changes.
+
+          Use **Create a merge commit** when accepting this PR so future checks retain the upstream history. This draft will not merge itself. While it remains open, the updater leaves it unchanged.
+          EOF
+          gh pr create --base "$BASE_BRANCH" --head "$branch" --draft \
+            --title "Pedro Quickstart updates (${upstream:0:12})" \
+            --body-file "$body" >> "$GITHUB_STEP_SUMMARY"
