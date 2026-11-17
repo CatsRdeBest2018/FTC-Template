@@ -1,0 +1,129 @@
+name: FTC Template updates
+
+on:
+  schedule:
+    - cron: '45 12 * * *'
+  workflow_dispatch:
+  push:
+    paths:
+      - '.github/workflows/template-updates.yml'
+      - 'tests/test_template_updates.py'
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ftc-template-updates
+  cancel-in-progress: false
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+      - name: Test custom-code preservation
+        run: python3 -m unittest discover -s tests -p 'test_template_updates.py' -v
+
+  propose:
+    needs: validate
+    if: >-
+      github.repository != 'CatsRdeBest2018/FTC-Template' &&
+      (github.event_name != 'push' || github.ref == format('refs/heads/{0}', github.event.repository.default_branch))
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: write
+      pull-requests: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+      BASE_BRANCH: ${{ github.event.repository.default_branch }}
+    steps:
+      - uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4.3.1
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 0
+      - name: Propose template updates without replacing custom code
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ -n "$(git status --porcelain)" ]; then
+            echo '::error::Refusing to update a dirty checkout.'
+            exit 1
+          fi
+          existing=$(gh pr list --state open --limit 1000 --json headRefName --jq '[.[] | select(.headRefName | startswith("codex/template-update-"))] | length')
+          if [ "$existing" != 0 ]; then
+            echo 'An update PR is already open; leaving it and your edits untouched.' >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          git fetch --no-tags https://github.com/CatsRdeBest2018/FTC-Template.git main
+          upstream=$(git rev-parse FETCH_HEAD)
+          state='.github/template-sync-base'
+          if git cat-file -e "HEAD:$state" 2>/dev/null; then
+            baseline=$(git show "HEAD:$state")
+            if ! [[ "$baseline" =~ ^[0-9a-f]{40}$ ]] || ! git merge-base --is-ancestor "$baseline" "$upstream"; then
+              echo '::error::The saved template baseline is invalid or upstream history changed. Manual review is required.'
+              exit 1
+            fi
+          else
+            # GitHub template copies have a new root commit. Its exact tree proves
+            # which source snapshot was copied, even after project customizations.
+            roots=$(git rev-list --max-parents=0 HEAD)
+            if [ "$(printf '%s\n' "$roots" | wc -l | tr -d ' ')" != 1 ]; then
+              echo '::error::Cannot identify a unique initial template snapshot. Manual setup is required.'
+              exit 1
+            fi
+            initial_tree=$(git rev-parse "$roots^{tree}")
+            baseline=$(git log --format='%H %T' "$upstream" | awk -v tree="$initial_tree" '$2 == tree && !found {print $1; found=1}')
+            if [ -z "$baseline" ]; then
+              echo '::error::Initial project files do not exactly match a template snapshot. Refusing to guess and overwrite customizations.'
+              exit 1
+            fi
+          fi
+          patch="$RUNNER_TEMP/ftc-template-update.patch"
+          # Workflows and our per-project checkpoint are managed locally.
+          git diff --binary --full-index "$baseline" "$upstream" -- . \
+            ':(exclude).github/workflows/**' ':(exclude).github/template-sync-base' > "$patch"
+          if [ ! -s "$patch" ]; then
+            echo 'No new template code changes to propose. Workflow changes are excluded.' >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+          branch="codex/template-update-${upstream:0:12}-${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          git switch -c "$branch"
+          # Git uses the old blobs in the patch as the common base. Never use
+          # --theirs, --ours, --reject, or a file-copy/reset fallback here.
+          if ! git apply --3way --index "$patch"; then
+            {
+              echo '## Template changes need manual conflict resolution'
+              echo 'Nothing was pushed. Your default branch and existing code are unchanged.'
+              echo "Compare: https://github.com/CatsRdeBest2018/FTC-Template/compare/$baseline...$upstream"
+              echo '```'
+              git diff --name-only --diff-filter=U
+              echo '```'
+            } >> "$GITHUB_STEP_SUMMARY"
+            echo '::error::Template changes conflict with this project. See the log and summary; no changes were pushed.'
+            exit 1
+          fi
+          mkdir -p .github
+          printf '%s\n' "$upstream" > "$state"
+          git add -- "$state"
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git -c core.hooksPath=/dev/null commit -m "Propose FTC Template updates through ${upstream:0:12}"
+          git push origin "HEAD:refs/heads/$branch"
+          body="$RUNNER_TEMP/ftc-template-update-pr.md"
+          cat > "$body" <<EOF
+          Apply [FTC-Template changes](https://github.com/CatsRdeBest2018/FTC-Template/compare/$baseline...$upstream) using Git's three-way patch application.
+
+          Existing project changes were retained without conflict-resolution shortcuts. Review the diff, build, and test the robot before accepting: a clean merge does not guarantee API or behavior compatibility. These changes have not been built or robot-tested by this workflow.
+
+          Workflow files are excluded and must be updated manually. The template checkpoint in this PR records the accepted source version; keep that file when merging. Squash and merge commits both work.
+
+          This draft never merges itself. While it is open, the updater leaves it and your edits untouched.
+          EOF
+          if ! gh pr create --base "$BASE_BRANCH" --head "$branch" --draft \
+            --title "FTC Template updates (${upstream:0:12})" --body-file "$body" >> "$GITHUB_STEP_SUMMARY"; then
+            echo '::error::Could not create the PR. Check Settings > Actions > General > Allow GitHub Actions to create and approve pull requests. A proposal branch was pushed, but the default branch is unchanged.'
+            exit 1
+          fi

@@ -1,5 +1,8 @@
 # Automatic Pedro Quickstart updates
 
+For projects made from this template, see [Template updates](template-updates.md).
+They receive updates from FTC-Template through their own draft PRs.
+
 GitHub Actions checks Pedro-Pathing/Quickstart's `master` branch daily at 11:30 UTC
 (6:30 a.m. Eastern in winter, 7:30 a.m. in summer). Run it manually from
 Actions → Pedro Quickstart updates → Run workflow.
