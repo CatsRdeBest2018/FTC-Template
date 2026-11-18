@@ -1,8 +1,7 @@
 package org.firstinspires.ftc.teamcode.opmodes.debug.sensors;
 
 import com.bylazar.configurables.annotations.Configurable;
-import com.bylazar.telemetry.PanelsTelemetry;
-import com.bylazar.telemetry.TelemetryManager;
+import org.firstinspires.ftc.teamcode.util.RobotTelemetry;
 import com.qualcomm.hardware.gobilda.GoBildaPinpointDriver;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -25,14 +24,14 @@ public class PinpointTester extends OpMode {
     public static boolean RECALIBRATE_IMU = false;
     public static boolean RESET_POSITION_AND_IMU = false;
 
-    private TelemetryManager telemetryM;
+    private RobotTelemetry telemetryM;
     private GoBildaPinpointDriver pinpoint;
     private String loadedName = "";
     private String lastAction = "None";
 
     @Override
     public void init() {
-        telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
+        telemetryM = RobotTelemetry.begin(telemetry);
         clearActions();
         telemetryM.addLine("Enter the Pinpoint configuration name in Panels");
         telemetryM.addLine("Keep the robot still while recalibrating the IMU");

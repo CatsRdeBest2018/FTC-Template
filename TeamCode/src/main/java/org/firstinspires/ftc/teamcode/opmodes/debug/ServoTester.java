@@ -6,14 +6,13 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.teamcode.opmodes.debug.util.HardwareTelemetry;
-import com.bylazar.telemetry.PanelsTelemetry;
-import com.bylazar.telemetry.TelemetryManager;
+import org.firstinspires.ftc.teamcode.util.RobotTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 @Configurable
 @TeleOp(name = "Servo Tester", group = "Debug")
 public class ServoTester extends OpMode {
-    private TelemetryManager telemetryM;
+    private RobotTelemetry telemetryM;
 
 
     public static String SERVO_NAME = "servo";
@@ -25,8 +24,8 @@ public class ServoTester extends OpMode {
 
     @Override
     public void init() {
-        telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
-        telemetryM.addLine("Enter servo name in Dashboard");
+        telemetryM = RobotTelemetry.begin(telemetry);
+        telemetryM.addLine("Enter servo name in Panels");
         telemetryM.addLine("Set ENABLE_SERVO = true when ready");
         telemetryM.update(telemetry);
     }
@@ -63,7 +62,7 @@ public class ServoTester extends OpMode {
         }
 
         if (servo != null) {
-            HardwareTelemetry.addDeviceInfo(telemetry, currentServoName, servo);
+            HardwareTelemetry.addDeviceInfo(telemetryM, currentServoName, servo);
             telemetryM.addLine("Servo Readings");
             telemetryM.addData("Enabled", ENABLE_SERVO);
             telemetryM.addData("Position", servo.getPosition());

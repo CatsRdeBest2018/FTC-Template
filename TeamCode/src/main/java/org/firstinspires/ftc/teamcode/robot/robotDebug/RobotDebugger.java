@@ -1,11 +1,10 @@
-package org.firstinspires.ftc.teamcode.opmodes.debug.robotDebug;
+package org.firstinspires.ftc.teamcode.robot.robotDebug;
 
 import com.bylazar.configurables.annotations.Configurable;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.bylazar.telemetry.PanelsTelemetry;
-import com.bylazar.telemetry.TelemetryManager;
+import org.firstinspires.ftc.teamcode.util.RobotTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
-import org.firstinspires.ftc.teamcode.opmodes.debug.robotDebug.RobotDebuggerVals.*;
+import org.firstinspires.ftc.teamcode.robot.robotDebug.RobotDebuggerVals.*;
 import org.firstinspires.ftc.teamcode.robot.Robot;
 
 /**
@@ -18,7 +17,7 @@ import org.firstinspires.ftc.teamcode.robot.Robot;
 @Configurable
 @TeleOp(name = "Robot Debugger", group = "Debug")
 public class RobotDebugger extends OpMode {
-    private TelemetryManager telemetryM;
+    private RobotTelemetry telemetryM;
 
     public static boolean MASTER_ENABLE = true;
 
@@ -26,7 +25,7 @@ public class RobotDebugger extends OpMode {
 
     @Override
     public void init() {
-        telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
+        telemetryM = RobotTelemetry.begin(telemetry);
         robot = new Robot(hardwareMap);
         stopDrivetrain();
 
@@ -38,7 +37,7 @@ public class RobotDebugger extends OpMode {
     @Override
     public void loop() {
         updateDrivetrain();
-        robot.tick(gamepad1,gamepad2);
+        robot.updateSubsystems();
 
         telemetryM.addData("Master Enable", MASTER_ENABLE);
         telemetryM.addLine("================================");
@@ -73,6 +72,6 @@ public class RobotDebugger extends OpMode {
 
     @Override
     public void stop() {
-        stopDrivetrain();
+        if (robot != null) robot.stop();
     }
 }

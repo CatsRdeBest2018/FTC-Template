@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.robot.config;
+package org.firstinspires.ftc.teamcode.robot;
 
 public final class RobotConstants {
     public static final class Drive {

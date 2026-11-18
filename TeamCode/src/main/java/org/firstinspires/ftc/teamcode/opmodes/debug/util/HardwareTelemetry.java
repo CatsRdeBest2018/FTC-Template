@@ -2,12 +2,12 @@ package org.firstinspires.ftc.teamcode.opmodes.debug.util;
 
 import com.qualcomm.robotcore.hardware.HardwareDevice;
 
-import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.teamcode.util.RobotTelemetry;
 
 /** Adds identification and connection details shared by all FTC hardware devices. */
 public final class HardwareTelemetry {
     public static void addDeviceInfo(
-            Telemetry telemetry,
+            RobotTelemetry telemetry,
             String configName,
             HardwareDevice device
     ) {

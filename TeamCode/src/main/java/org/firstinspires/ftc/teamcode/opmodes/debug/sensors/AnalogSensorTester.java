@@ -7,15 +7,14 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.AnalogInput;
 
 import org.firstinspires.ftc.teamcode.opmodes.debug.util.HardwareTelemetry;
-import com.bylazar.telemetry.PanelsTelemetry;
-import com.bylazar.telemetry.TelemetryManager;
+import org.firstinspires.ftc.teamcode.util.RobotTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 /** Displays voltage and range information for any configured analog input. */
 @Configurable
 @TeleOp(name = "Analog Sensor Tester", group = "Debug/Sensors")
 public class AnalogSensorTester extends OpMode {
-    private TelemetryManager telemetryM;
+    private RobotTelemetry telemetryM;
 
     public static String SENSOR_NAME = "analogSensor";
 
@@ -24,7 +23,7 @@ public class AnalogSensorTester extends OpMode {
 
     @Override
     public void init() {
-        telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
+        telemetryM = RobotTelemetry.begin(telemetry);
         telemetryM.addLine("Enter an analog sensor name in Panels");
         telemetryM.update(telemetry);
     }
@@ -42,7 +41,7 @@ public class AnalogSensorTester extends OpMode {
         double voltage = sensor.getVoltage();
         double maxVoltage = sensor.getMaxVoltage();
 
-        HardwareTelemetry.addDeviceInfo(telemetry, loadedName, sensor);
+        HardwareTelemetry.addDeviceInfo(telemetryM, loadedName, sensor);
         telemetryM.addLine("Analog Readings");
         telemetryM.addData("Voltage", String.format(Locale.US,  "%.4f V", voltage));
         telemetryM.addData("Maximum Voltage", String.format(Locale.US,  "%.4f V", maxVoltage));

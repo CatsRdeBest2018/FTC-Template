@@ -8,15 +8,14 @@ import com.qualcomm.robotcore.hardware.DistanceSensor;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.opmodes.debug.util.HardwareTelemetry;
-import com.bylazar.telemetry.PanelsTelemetry;
-import com.bylazar.telemetry.TelemetryManager;
+import org.firstinspires.ftc.teamcode.util.RobotTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 /** Displays live measurements from any configured distance sensor. */
 @Configurable
 @TeleOp(name = "Distance Sensor Tester", group = "Debug/Sensors")
 public class DistanceSensorTester extends OpMode {
-    private TelemetryManager telemetryM;
+    private RobotTelemetry telemetryM;
 
     public static String SENSOR_NAME = "distanceSensor";
 
@@ -25,7 +24,7 @@ public class DistanceSensorTester extends OpMode {
 
     @Override
     public void init() {
-        telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
+        telemetryM = RobotTelemetry.begin(telemetry);
         telemetryM.addLine("Enter a distance sensor name in Panels");
         telemetryM.update(telemetry);
     }
@@ -40,7 +39,7 @@ public class DistanceSensorTester extends OpMode {
             return;
         }
 
-        HardwareTelemetry.addDeviceInfo(telemetry, loadedName, sensor);
+        HardwareTelemetry.addDeviceInfo(telemetryM, loadedName, sensor);
         telemetryM.addLine("Distance Readings");
         telemetryM.addData("Millimeters", String.format(Locale.US,  "%.2f mm", sensor.getDistance(DistanceUnit.MM)));
         telemetryM.addData("Centimeters", String.format(Locale.US,  "%.2f cm", sensor.getDistance(DistanceUnit.CM)));

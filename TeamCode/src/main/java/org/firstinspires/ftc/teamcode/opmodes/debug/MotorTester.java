@@ -11,15 +11,14 @@ import com.qualcomm.robotcore.util.Range;
 
 import org.firstinspires.ftc.robotcore.external.navigation.CurrentUnit;
 import org.firstinspires.ftc.teamcode.opmodes.debug.util.HardwareTelemetry;
-import com.bylazar.telemetry.PanelsTelemetry;
-import com.bylazar.telemetry.TelemetryManager;
+import org.firstinspires.ftc.teamcode.util.RobotTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 /** Safely tests any configured DC motor and displays its live diagnostic data. */
 @Configurable
 @TeleOp(name = "Motor Tester", group = "Debug")
 public class MotorTester extends OpMode {
-    private TelemetryManager telemetryM;
+    private RobotTelemetry telemetryM;
 
     public static String MOTOR_NAME = "motor";
     public static double MOTOR_POWER = 0.20;
@@ -33,7 +32,7 @@ public class MotorTester extends OpMode {
 
     @Override
     public void init() {
-        telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
+        telemetryM = RobotTelemetry.begin(telemetry);
         telemetryM.addLine("Enter a motor configuration name in Panels");
         telemetryM.addLine("Set ENABLE_MOTOR = true when ready");
         telemetryM.update(telemetry);
@@ -55,7 +54,7 @@ public class MotorTester extends OpMode {
         boolean shouldRun = ENABLE_MOTOR;
         motor.setPower(shouldRun ? requestedPower : 0.0);
 
-        HardwareTelemetry.addDeviceInfo(telemetry, loadedMotorName, motor);
+        HardwareTelemetry.addDeviceInfo(telemetryM, loadedMotorName, motor);
 
         telemetryM.addLine("Motor Readings");
         telemetryM.addData("Status", shouldRun ? "RUNNING" : "STOPPED");

@@ -2,13 +2,16 @@ package org.firstinspires.ftc.teamcode.robot;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
 import static com.pedropathing.api.Paths.line;
+import static com.pedropathing.ivy.commands.Commands.lazy;
 
 import com.pedropathing.follower.Follower;
+import com.pedropathing.ivy.Command;
+import com.pedropathing.ivy.CommandBuilder;
+import com.pedropathing.ivy.behaviors.EndCondition;
+import com.pedropathing.ivy.pedro.PedroCommands;
 import com.pedropathing.math.Pose;
 import com.pedropathing.paths.Path;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
 import org.firstinspires.ftc.teamcode.pedro.Constants;
@@ -17,7 +20,7 @@ import org.firstinspires.ftc.teamcode.robot.subsystems.LimelightController;
 
 public class Robot {
     public final Follower follower;
-    public final RobotMacros macros;
+    public final Commands commands;
     public DcMotorEx frontLeft;
     public DcMotorEx frontRight;
     public DcMotorEx backLeft;
@@ -31,17 +34,18 @@ public class Robot {
         backLeft = hardwareMap.get(DcMotorEx.class, HardwareNames.BACK_LEFT_DRIVE);
         backRight = hardwareMap.get(DcMotorEx.class, HardwareNames.BACK_RIGHT_DRIVE);
 
+        frontLeft.setDirection(DcMotorEx.Direction.FORWARD);
+        frontRight.setDirection(DcMotorEx.Direction.FORWARD);
+        backLeft.setDirection(DcMotorEx.Direction.FORWARD);
+        backRight.setDirection(DcMotorEx.Direction.FORWARD);
+
         frontLeft.setZeroPowerBehavior(BRAKE);
         frontRight.setZeroPowerBehavior(BRAKE);
         backLeft.setZeroPowerBehavior(BRAKE);
         backRight.setZeroPowerBehavior(BRAKE);
 
-        frontLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-        backLeft.setDirection(DcMotorSimple.Direction.REVERSE);
-
         follower = Constants.createFollower(hardwareMap);
-        limelightController = new LimelightController(hardwareMap);
-        macros = new RobotMacros();
+        commands = new Commands();
     }
 
     public void motorDriveXYVectors(double x, double y, double rotation) {
@@ -50,53 +54,71 @@ public class Robot {
         double frontRightPower = y - x - rotation;
         double backRightPower = y + x - rotation;
 
-        frontLeft.setPower(frontLeftPower);
-        backLeft.setPower(backLeftPower);
-        frontRight.setPower(frontRightPower);
-        backRight.setPower(backRightPower);
+        double scale = Math.max(1.0, Math.abs(y) + Math.abs(x) + Math.abs(rotation));
+        frontLeft.setPower(frontLeftPower / scale);
+        backLeft.setPower(backLeftPower / scale);
+        frontRight.setPower(frontRightPower / scale);
+        backRight.setPower(backRightPower / scale);
     }
 
-    public void tick(Gamepad gamepad1, Gamepad gamepad2) {
-        boolean driverWantsControl =
-                Math.abs(gamepad1.left_stick_x) > 0.1 ||
-                Math.abs(gamepad1.left_stick_y) > 0.1 ||
-                Math.abs(gamepad1.right_stick_x) > 0.1;
-
-        // Do not stop normal manual driving. Only interrupt an active automatic
-        // path/hold when the driver moves a joystick.
-        if (driverWantsControl && (follower.following() || follower.holding())) {
-            macros.stop();
-        }
-
+    public void update() {
         follower.update();
-        limelightController.update();
+        updateSubsystems();
+    }
+
+    public void updateSubsystems() {
+        if (limelightController != null) limelightController.update();
     }
 
     public void stop() {
         follower.stop();
-        macros.stop();
-        limelightController.stop();
+        follower.drivetrain.stop();
+        frontLeft.setPower(0);
+        frontRight.setPower(0);
+        backLeft.setPower(0);
+        backRight.setPower(0);
+        if (limelightController != null) limelightController.stop();
     }
 
-    public class RobotMacros {
-        public void driveToPos(Pose destination) {driveToPos(destination, 1.0, 1.0);}
-        public void driveToPos(Pose destination, double drive_power, double position_tolerance) {
-            Pose start = follower.pose();
-
-            if (Math.hypot(destination.x() - start.x(), destination.y() - start.y())
-                    < position_tolerance) {
-                follower.hold(destination);
-            } else {
-                Path path = line(start, destination)
-                        .linear(start, destination)
-                        .with(Constants.foresightConfig.maxPathSpeed.at(drive_power));
-                follower.holdEnd.set(true);
-                follower.follow(path);
-            }
+    public final class Commands {
+        public Command driveToPos(Pose destination) {
+            return driveToPos(destination, 1.0, 1.0);
         }
 
-        public void stop() {
-            follower.stop();
+        public Command driveToPos(Pose destination, double drivePower, double positionTolerance) {
+            if (destination == null || !Double.isFinite(drivePower)
+                    || drivePower <= 0 || drivePower > 1
+                    || !Double.isFinite(positionTolerance) || positionTolerance < 0) {
+                throw new IllegalArgumentException("Provide a destination, power in (0, 1], and nonnegative tolerance");
+            }
+            return lazy(() -> {
+                Pose start = follower.pose();
+                if (start.distance(destination) <= positionTolerance) {
+                    return holdPosition(destination);
+                }
+                Path path = line(start, destination)
+                        .linear(start, destination)
+                        .with(Constants.foresightConfig.maxPathSpeed.at(drivePower));
+                follower.holdEnd.set(true);
+                return followPath(path);
+            }).requiring(follower);
+        }
+
+        public Command followPath(Path path) {
+            return stopOnInterrupt(PedroCommands.follow(follower, path).requiring(follower));
+        }
+
+        public Command holdPosition(Pose destination) {
+            return stopOnInterrupt(PedroCommands.hold(follower, destination).requiring(follower));
+        }
+
+        private CommandBuilder stopOnInterrupt(CommandBuilder command) {
+            return command.setEnd(reason -> {
+                if (reason != EndCondition.NATURALLY) {
+                    follower.stop();
+                    follower.drivetrain.stop();
+                }
+            });
         }
     }
 }

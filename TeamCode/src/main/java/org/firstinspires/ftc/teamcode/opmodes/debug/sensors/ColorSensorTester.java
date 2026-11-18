@@ -11,15 +11,14 @@ import com.qualcomm.robotcore.hardware.NormalizedRGBA;
 
 import org.firstinspires.ftc.robotcore.external.navigation.DistanceUnit;
 import org.firstinspires.ftc.teamcode.opmodes.debug.util.HardwareTelemetry;
-import com.bylazar.telemetry.PanelsTelemetry;
-import com.bylazar.telemetry.TelemetryManager;
+import org.firstinspires.ftc.teamcode.util.RobotTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 
 /** Displays raw and optional advanced readings from any configured color sensor. */
 @Configurable
 @TeleOp(name = "Color Sensor Tester", group = "Debug/Sensors")
 public class ColorSensorTester extends OpMode {
-    private TelemetryManager telemetryM;
+    private RobotTelemetry telemetryM;
 
     public static String SENSOR_NAME = "colorSensor";
 
@@ -28,7 +27,7 @@ public class ColorSensorTester extends OpMode {
 
     @Override
     public void init() {
-        telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
+        telemetryM = RobotTelemetry.begin(telemetry);
         telemetryM.addLine("Enter a color sensor name in Panels");
         telemetryM.update(telemetry);
     }
@@ -43,7 +42,7 @@ public class ColorSensorTester extends OpMode {
             return;
         }
 
-        HardwareTelemetry.addDeviceInfo(telemetry, loadedName, sensor);
+        HardwareTelemetry.addDeviceInfo(telemetryM, loadedName, sensor);
         telemetryM.addLine("Raw Color Readings");
         telemetryM.addData("Red", sensor.red());
         telemetryM.addData("Green", sensor.green());

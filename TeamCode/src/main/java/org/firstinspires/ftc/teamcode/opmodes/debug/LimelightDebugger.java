@@ -12,8 +12,7 @@ import com.qualcomm.hardware.limelightvision.LLResultTypes.FiducialResult;
 import com.qualcomm.hardware.limelightvision.LLStatus;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import com.bylazar.telemetry.PanelsTelemetry;
-import com.bylazar.telemetry.TelemetryManager;
+import org.firstinspires.ftc.teamcode.util.RobotTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.util.Range;
 
@@ -26,7 +25,7 @@ import java.util.List;
 @Configurable
 @TeleOp(name = "Limelight Debugger", group = "Debug")
 public class LimelightDebugger extends OpMode {
-    private TelemetryManager telemetryM;
+    private RobotTelemetry telemetryM;
 
     public static String LIMELIGHT_NAME = "limelight";
     public static int PIPELINE = 0;
@@ -42,7 +41,7 @@ public class LimelightDebugger extends OpMode {
 
     @Override
     public void init() {
-        telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
+        telemetryM = RobotTelemetry.begin(telemetry);
         telemetryM.addLine("Enter a Limelight configuration name and pipeline in Panels");
         telemetryM.update(telemetry);
     }
@@ -58,7 +57,7 @@ public class LimelightDebugger extends OpMode {
         }
 
         applyConfiguration();
-        HardwareTelemetry.addDeviceInfo(telemetry, loadedName, limelight);
+        HardwareTelemetry.addDeviceInfo(telemetryM, loadedName, limelight);
         addCameraStatus();
 
         LLResult result = limelight.getLatestResult();

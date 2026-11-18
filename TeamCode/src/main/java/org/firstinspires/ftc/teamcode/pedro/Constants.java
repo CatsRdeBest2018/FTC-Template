@@ -4,6 +4,7 @@ import com.pedropathing.algorithm.Foresight;
 import com.pedropathing.algorithm.ForesightConfig;
 import com.pedropathing.controllers.Controller;
 import com.pedropathing.follower.Follower;
+import com.pedropathing.localization.Localizer;
 import com.pedropathing.math.Matrix;
 import com.pedropathing.math.Vector2D;
 import com.pedropathing.revhub.drivetrains.Mecanum;
@@ -70,9 +71,14 @@ public final class Constants {
             }
     );
 
+    /** Use for both standalone localization tests and followers to enable Panels Field. */
+    public static Localizer createLocalizer(HardwareMap hardwareMap) {
+        return new FieldLocalizer(new PinpointLocalizer(hardwareMap, localizerConfig));
+    }
+
     public static Follower createFollower(HardwareMap hardwareMap) {
         return new Follower(
-                new PinpointLocalizer(hardwareMap, localizerConfig),
+                createLocalizer(hardwareMap),
                 new Mecanum(hardwareMap, drivetrainConfig),
                 new Foresight(foresightConfig));
     }
