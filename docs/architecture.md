@@ -128,6 +128,11 @@ position control. Use `update(measurement)` for timed robot loops, or
 `update(measurement, seconds)` for fixed-step loops and simulation; use one timing
 style consistently within a controller run.
 
+`CalibrationTable` provides linear, monotone cubic, nearest, and step interpolation,
+linear/quadratic regression, and automatic selection using held-out prediction error.
+Construct immutable tables in the subsystem that owns the measurements. See
+[calibration tables](calibration-tables.md) for examples, output limits, and selection behavior.
+
 Robot-specific mechanisms, field routes, alliance logic, motor directions, and
 odometry calibration from BioBuzz are not included. Configure and tune the template
 for the actual robot before driving its example paths.
@@ -136,5 +141,5 @@ for the actual robot before driving its example paths.
 
 Run `./gradlew :TeamCode:assembleDebug :TeamCode:testDebugUnitTest`.
 The JVM tests cover command scheduling and STOP cleanup, alliance pose transforms,
-and pose handoff. Physical
+pose handoff, calibration interpolation, and automatic model selection. Physical
 driving, localization, and Panels connectivity require a robot.
